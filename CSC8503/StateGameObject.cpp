@@ -44,15 +44,11 @@ void StateGameObject::Update(float dt) {
 }
 
 void StateGameObject::MoveLeft(float dt) {
-	//std::cout << "move left, counter: " << counter << std::endl;
 	GetPhysicsObject()->AddForce({ -5, 0, 0 });
-	//GetPhysicsObject()->PrintForce();
 	counter += dt;
 }
 
 void StateGameObject::MoveRight(float dt) {
-	//std::cout << "move right, counter: " << counter << std::endl;
 	GetPhysicsObject()->AddForce({ 5, 0, 0 });
-	//GetPhysicsObject()->PrintForce();
 	counter -= dt;
 }

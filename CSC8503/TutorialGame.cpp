@@ -254,11 +254,9 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	
-
 	InitMixedGridWorld(15, 15, 3.5f, 3.5f);
 	//stateObject
-	testStateObject = AddStateObjectToWorld(Vector3(0, 15, 0));
+	//testStateObject = AddStateObjectToWorld(Vector3(0, 15, 0));
 	//constraint
 	//BridgeConstraintTest();
 
