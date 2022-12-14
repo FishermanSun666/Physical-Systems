@@ -7,6 +7,8 @@
 
 #include "StateGameObject.h"
 
+#include "GamePlayer.h"
+
 namespace NCL {
 	namespace CSC8503 {
 		class TutorialGame		{
@@ -30,6 +32,7 @@ namespace NCL {
 			test scenarios (constraints, collision types, and so on). 
 			*/
 			void InitGameExamples();
+			void InitGameObjects();
 
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
 			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
@@ -52,8 +55,13 @@ namespace NCL {
 			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
+			//test state machine
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
 			StateGameObject* testStateObject;
+
+			//game
+			void PlayerObjectMovement();
+			GameObject* AddBallToWorld(const Vector3& position);
 
 
 #ifdef USEVULKAN
@@ -92,6 +100,9 @@ namespace NCL {
 
 			GameObject* objClosest = nullptr;
 
+			//game
+			GamePlayer* playerObject = nullptr;
+			Vector3 playerViewOffset = Vector3(0, 5, 5);
 		};
 	}
 }

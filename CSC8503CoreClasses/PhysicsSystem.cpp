@@ -389,10 +389,6 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		Vector3 position = transform.GetPosition();
 		Vector3 linearVel = object->GetLinearVelocity();
 		position += linearVel * dt;
-		//TODO
-		if (linearVel.x != 0) {
-			std::cout << "position: " << position.x << std::endl;
-		}
 		transform.SetPosition(position);
 		//Linear Damping
 		linearVel = linearVel * frameLinearDamping;
@@ -402,7 +398,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		Quaternion orientation = transform.GetOrientation();
 		Vector3 angVel = object->GetAngularVelocity();
 
-		orientation = orientation + (Quaternion(angVel * dt * 0.5f, 0.0f) * orientation);
+		orientation = orientation + (Quaternion(angVel  * dt * 0.5f, 0.0f) * orientation);
 		orientation.Normalise();
 
 		transform.SetOrientation(orientation);
