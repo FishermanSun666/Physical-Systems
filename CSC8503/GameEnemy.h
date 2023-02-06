@@ -61,20 +61,14 @@ public:
 			moveTarget = target;
 			return true;
 		}
-
 		//find path
 		NavigationPath outPath;
 		bool found = map->FindPath(position, target, outPath);
 		if (!found) {
 			return false;
 		}
-
 		//get next target
 		Vector3 toPos;
-		//TODO test
-		//bool find = false;
-		//Vector3 pre = position;
-		//pop first position
 		outPath.PopWaypoint(moveTarget);
 		while (outPath.PopWaypoint(toPos)) {
 			toPos.y = position.y;
@@ -82,16 +76,8 @@ public:
 				//too close, find next position.
 				continue;
 			}
-			//TODO test
-			//if (!find) {
-			//	moveTarget = toPos;
-			//	find = true;
-			//}
 			moveTarget = toPos;
 			break;
-			//NCL::Debug::DrawLine(pre, toPos, Vector4(0, 1, 0, 1));
-			//pre = toPos;
-			//break;
 		}
 		return true;
 	};

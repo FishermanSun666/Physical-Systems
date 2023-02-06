@@ -225,7 +225,6 @@ int main() {
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);
 
-	//Test TODO
 	//TestPushdownAutomata(w);
 	//TestBehaviourTree();
 
