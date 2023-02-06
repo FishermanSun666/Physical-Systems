@@ -21,17 +21,14 @@ NavigationGrid::NavigationGrid()	{
 	allNodes	= nullptr;
 }
 
-NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
-
-	std::ofstream f(Assets::DATADIR + filename);
-	f << "hello!" << std::endl;
-	f.close();
-
-
-
+NavigationGrid::NavigationGrid(float nodeSize, const std::string&filename) : NavigationGrid() {
 	std::ifstream infile(Assets::DATADIR + filename);
 
-	infile >> nodeSize;
+	if (!infile.is_open()) {
+		return;
+	}
+
+	this->nodeSize = nodeSize;
 	infile >> gridWidth;
 	infile >> gridHeight;
 
@@ -43,7 +40,7 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 			char type = 0;
 			infile >> type;
 			n.type = type;
-			n.position = Vector3((float)(x * nodeSize), 0, (float)(y * nodeSize));
+			n.position = Vector3((float)(x * nodeSize), nodeSize, (float)(y * nodeSize));
 		}
 	}
 	
@@ -69,9 +66,13 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 					if (n.connected[i]->type == '.') {
 						n.costs[i]		= 1;
 					}
+					//everywhere can be through;
 					if (n.connected[i]->type == 'x') {
 						n.connected[i] = nullptr; //actually a wall, disconnect!
 					}
+					/*else {
+						n.costs[i] = 1;
+					}*/
 				}
 			}
 		}	

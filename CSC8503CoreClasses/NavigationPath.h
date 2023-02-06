@@ -24,7 +24,7 @@ namespace NCL {
 				waypoints.pop_back();
 				return true;
 			}
-
+		
 		protected:
 
 			std::vector <Vector3> waypoints;

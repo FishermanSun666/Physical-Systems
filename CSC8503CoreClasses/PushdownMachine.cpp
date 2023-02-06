@@ -10,6 +10,20 @@ PushdownMachine::PushdownMachine(PushdownState* initialState)
 
 PushdownMachine::~PushdownMachine()
 {
+	while (!stateStack.empty()) {
+		auto dl = stateStack.top();
+		stateStack.pop();
+		delete dl;
+	}
+	while (!reserveStack.empty()) {
+		auto dl = reserveStack.top();
+		reserveStack.pop();
+		delete dl;
+	}
+}
+
+void PushdownMachine::AddReserveState(PushdownState* state) {
+	reserveStack.push(state);
 }
 
 bool PushdownMachine::Update(float dt) {
@@ -20,7 +34,8 @@ bool PushdownMachine::Update(float dt) {
 		switch (result) {
 			case PushdownState::Pop: {
 				activeState->OnSleep();
-				delete activeState;
+				reserveStack.push(activeState);
+				//delete activeState;
 				stateStack.pop();
 				if (stateStack.empty()) {
 					return false;
@@ -33,6 +48,14 @@ bool PushdownMachine::Update(float dt) {
 			case PushdownState::Push: {
 				activeState->OnSleep();		
 
+				if (newState == nullptr) {
+					//if state not support new state, get new state from reserve
+					if (reserveStack.empty()) {
+						return false;
+					}
+					newState = reserveStack.top();
+					reserveStack.pop();
+				}
 				stateStack.push(newState);
 				activeState = newState;
 				activeState->OnAwake();

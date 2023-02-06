@@ -4,10 +4,11 @@
 #include "GameTechVulkanRenderer.h"
 #endif
 #include "PhysicsSystem.h"
-
 #include "StateGameObject.h"
-
 #include "GamePlayer.h"
+#include "GameEnemy.h"
+#include "GameBall.h"
+#include "NavigationGrid.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -23,7 +24,6 @@ namespace NCL {
 
 			void InitCamera();
 			void UpdateKeys();
-
 			void InitWorld();
 
 			/*
@@ -43,6 +43,8 @@ namespace NCL {
 			bool SelectObject();
 			void MoveSelectedObject();
 			void DebugObjectMovement();
+			void RayCast();
+			void CameraLockOnPlayer();
 			void LockedObjectMovement();
 
 			void BridgeConstraintTest();
@@ -50,9 +52,6 @@ namespace NCL {
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
-
-			GameObject* AddPlayerToWorld(const Vector3& position);
-			GameObject* AddEnemyToWorld(const Vector3& position);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
 			//test state machine
@@ -60,8 +59,25 @@ namespace NCL {
 			StateGameObject* testStateObject;
 
 			//game
+			void ResetGame();
+
+			void UpdateGameObject(float dt);
+			void UpdateScreenInfo(float dt);
+
+			GamePlayer* AddPlayerToWorld(const Vector3& position);
+			GameEnemy* AddEnemyToWorld(const Vector3& position);
+			GameBall* AddBallToWorld(const Vector3& position);
+			GameObject* AddGoalToWorld(const Vector3& position);
+			GameObject* AddGoalDocrationToWorld(const Vector3& position);
+
 			void PlayerObjectMovement();
-			GameObject* AddBallToWorld(const Vector3& position);
+			void InitMap();
+			bool CheckBallStatus();
+			void UpdatePlayerInfo(float dt);
+			void UpdateEnemeys(float dt);
+			bool KickBall(float dt);
+			bool Goal();
+			void KillPlayer();
 
 
 #ifdef USEVULKAN
@@ -90,6 +106,7 @@ namespace NCL {
 			MeshGeometry*	charMesh	= nullptr;
 			MeshGeometry*	enemyMesh	= nullptr;
 			MeshGeometry*	bonusMesh	= nullptr;
+			MeshGeometry* goalMesh = nullptr;
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
@@ -101,8 +118,20 @@ namespace NCL {
 			GameObject* objClosest = nullptr;
 
 			//game
+			float g_player_revive_time = 5.0f;
+			int g_goal_score = 20;
+			float g_goal_tip_time = 3.0f;
+
+			bool pause = false;
+			bool gameover = false;
+			float goalTime = 0;
+			Vector3 playerViewOffset = Vector3(5, 1, 5);
+
+			NavigationGrid* mapPathFinding = nullptr;
+			GameBall* ballObject = nullptr;
+			GameObject* goalObject = nullptr;
 			GamePlayer* playerObject = nullptr;
-			Vector3 playerViewOffset = Vector3(0, 5, 5);
+			std::vector<GameEnemy*> enemyObjects ;
 		};
 	}
 }

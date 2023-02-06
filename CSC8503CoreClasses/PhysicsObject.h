@@ -1,4 +1,5 @@
 #pragma once
+
 using namespace NCL::Maths;
 
 namespace NCL {
@@ -50,6 +51,9 @@ namespace NCL {
 
 			void ClearForces();
 
+			void SetCoeficient(float c) { coeficient = c; }
+			float GetCoeficient() { return coeficient; }
+
 			void SetLinearVelocity(const Vector3& v) {
 				linearVelocity = v;
 			}
@@ -70,7 +74,9 @@ namespace NCL {
 		protected:
 			const CollisionVolume* volume;
 			Transform*		transform;
-
+			
+			//coefficient
+			float coeficient = 0.33f;
 			float inverseMass;
 			float elasticity;
 			float friction;

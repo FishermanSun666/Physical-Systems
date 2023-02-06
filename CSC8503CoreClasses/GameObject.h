@@ -1,6 +1,8 @@
 #pragma once
+#include "PhysicsObject.h"
 #include "Transform.h"
 #include "CollisionVolume.h"
+#include "RenderObject.h"
 
 using std::vector;
 
@@ -26,6 +28,9 @@ namespace NCL::CSC8503 {
 			return isActive;
 		}
 
+		void SetTrasform(Transform t) {
+			transform = t;
+		}
 		Transform& GetTransform() {
 			return transform;
 		}
@@ -48,6 +53,12 @@ namespace NCL::CSC8503 {
 
 		void SetPhysicsObject(PhysicsObject* newObject) {
 			physicsObject = newObject;
+		}
+
+		void SetColour(const Vector4& c) {
+			if (nullptr != renderObject) {
+				renderObject->SetColour(c);
+			}
 		}
 
 		const std::string& GetName() const {

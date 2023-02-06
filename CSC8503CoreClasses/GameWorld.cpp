@@ -28,10 +28,11 @@ void GameWorld::Clear() {
 }
 
 void GameWorld::ClearAndErase() {
-	for (auto& i : gameObjects) {
+	gameObjects = std::vector<GameObject*>();
+	for (auto i : gameObjects) {
 		delete i;
 	}
-	for (auto& i : constraints) {
+	for (auto i : constraints) {
 		delete i;
 	}
 	Clear();
@@ -85,7 +86,7 @@ bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObje
 	RayCollision collision;
 
 	for (auto& i : gameObjects) {
-		if (!i->GetBoundingVolume()) { //objects might not be collideable etc...
+		if (!i->GetBoundingVolume()) { //objects might not be colliedable etc...
 			continue;
 		}
 		if (i == ignoreThis) {

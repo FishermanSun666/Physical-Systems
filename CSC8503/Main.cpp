@@ -16,8 +16,8 @@
 #include "NetworkedGame.h"
 
 #include "PushdownMachine.h"
-
 #include "PushdownState.h"
+#include "TestPushdown.h"
 
 #include "BehaviourNode.h"
 #include "BehaviourSelector.h"
@@ -32,6 +32,7 @@ using namespace CSC8503;
 #include <thread>
 #include <sstream>
 
+vector < Vector3 > testNodes;
 void TestPathfinding() {
 
 }
@@ -163,7 +164,7 @@ void TestBehaviourTree() {
 	selection->AddChild(lookForTreasure);
 	selection->AddChild(lookForItems);
 
-	//Furthur
+	//Further
 	ParallelBehaviour* parallel = new ParallelBehaviour("Loot Parallel");
 	parallel->AddChild(lookForTreasure);
 	parallel->AddChild(lookForItems);
@@ -192,18 +193,15 @@ void TestBehaviourTree() {
 }
 ////////////////////////////////////////////////////////////////////////////////
 //test pushdown automata
-
-class PauseScreen : public PushdownState {
-	PushdownResult OnUpdate(float dt, PushdownState** newState) override {
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {
-			return PushdownResult::Pop;
+void TestPushdownAutomata(Window* w) {
+	PushdownMachine machine(new IntroScreen());
+	while (w->UpdateWindow()) {
+		float dt = w->GetTimer()->GetTimeDeltaSeconds();
+		if (!machine.Update(dt)) {
+			return;
 		}
-		return PushdownResult::NoChange;
 	}
-	void OnAwake() override {
-		std::cout << "Press U to unpause game!\n";
-	}
-};
+}
 
 /*
 
@@ -228,6 +226,7 @@ int main() {
 	w->LockMouseToWindow(true);
 
 	//Test TODO
+	//TestPushdownAutomata(w);
 	//TestBehaviourTree();
 
 	TutorialGame* g = new TutorialGame();

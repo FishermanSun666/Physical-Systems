@@ -66,8 +66,8 @@ namespace NCL {
 
 			bool shuffleConstraints;
 			bool shuffleObjects;
-			int		worldIDCounter;
-			int		worldStateCounter;
+			int	worldIDCounter;
+			int	worldStateCounter;
 		};
 	}
 }

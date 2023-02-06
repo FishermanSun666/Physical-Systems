@@ -31,19 +31,19 @@ namespace NCL::Maths {
 		Quaternion(double x, double y, double z, double w);
 		Quaternion(const Vector3& vector, float w);
 
-		Quaternion(const Matrix3 &m);
-		Quaternion(const Matrix4 &m);
+		Quaternion(const Matrix3& m);
+		Quaternion(const Matrix4& m);
 
 		~Quaternion(void) = default;
 
-		void		Normalise(); 
+		void		Normalise();
 		Quaternion	Normalised() const;
 
-			
-		static float Dot(const Quaternion &a, const Quaternion &b);
 
-		static Quaternion	Lerp(const Quaternion &from, const Quaternion &to, float by);
-		static Quaternion	Slerp(const Quaternion &from, const Quaternion &to, float by);
+		static float Dot(const Quaternion& a, const Quaternion& b);
+
+		static Quaternion	Lerp(const Quaternion& from, const Quaternion& to, float by);
+		static Quaternion	Slerp(const Quaternion& from, const Quaternion& to, float by);
 
 		Vector3		ToEuler() const;
 		Quaternion	Conjugate() const;
@@ -52,21 +52,21 @@ namespace NCL::Maths {
 		static Quaternion EulerAnglesToQuaternion(float pitch, float yaw, float roll);
 		static Quaternion AxisAngleToQuaterion(const Vector3& vector, float degrees);
 
-		inline bool  operator ==(const Quaternion &from)	const {
+		inline bool  operator ==(const Quaternion& from)	const {
 			if (x != from.x || y != from.y || z != from.z || w != from.w) {
 				return false;
 			}
 			return true;
 		}
 
-		inline bool  operator !=(const Quaternion &from)	const {
+		inline bool  operator !=(const Quaternion& from)	const {
 			if (x != from.x || y != from.y || z != from.z || w != from.w) {
 				return true;
 			}
 			return false;
 		}
 
-		inline Quaternion  operator *(const Quaternion &b)	const {
+		inline Quaternion  operator *(const Quaternion& b)	const {
 			return Quaternion(
 				(x * b.w) + (w * b.x) + (y * b.z) - (z * b.y),
 				(y * b.w) + (w * b.y) + (z * b.x) - (x * b.z),
@@ -75,13 +75,13 @@ namespace NCL::Maths {
 			);
 		}
 
-		Vector3		operator *(const Vector3 &a)	const;
+		Vector3		operator *(const Vector3& a)	const;
 
-		inline Quaternion  operator *(const float &a)		const {
-			return Quaternion(x*a, y*a, z*a, w*a);
+		inline Quaternion  operator *(const float& a)		const {
+			return Quaternion(x * a, y * a, z * a, w * a);
 		}
 
-		inline Quaternion  operator *=(const float &a) {
+		inline Quaternion  operator *=(const float& a) {
 			*this = *this * a;
 			return *this;
 		}
@@ -90,20 +90,20 @@ namespace NCL::Maths {
 			return Quaternion(-x, -y, -z, -w);
 		}
 
-		inline Quaternion  operator -(const Quaternion &a)	const {
+		inline Quaternion  operator -(const Quaternion& a)	const {
 			return Quaternion(x - a.x, y - a.y, z - a.z, w - a.w);
 		}
 
-		inline Quaternion  operator -=(const Quaternion &a) {
+		inline Quaternion  operator -=(const Quaternion& a) {
 			*this = *this - a;
 			return *this;
 		}
 
-		inline Quaternion  operator +(const Quaternion &a)	const {
+		inline Quaternion  operator +(const Quaternion& a)	const {
 			return Quaternion(x + a.x, y + a.y, z + a.z, w + a.w);
 		}
 
-		inline Quaternion  operator +=(const Quaternion &a) {
+		inline Quaternion  operator +=(const Quaternion& a) {
 			*this = *this + a;
 			return *this;
 		}
@@ -117,11 +117,11 @@ namespace NCL::Maths {
 		}
 
 		inline friend std::ostream& operator <<(std::ostream& o, const Quaternion& q);
-		inline friend std::istream& operator >>(std::istream& i, Quaternion &v);
+		inline friend std::istream& operator >>(std::istream& i, Quaternion& v);
 	};
 
 	std::ostream& operator<<(std::ostream& o, const Quaternion& q) {
-		o	<< "Quaternion("
+		o << "Quaternion("
 			<< q.x; o << ","
 			<< q.y; o << ","
 			<< q.z; o << ","
@@ -129,7 +129,7 @@ namespace NCL::Maths {
 		return o;
 	}
 
-	std::istream& operator >> (std::istream& i, Quaternion &v) {
+	std::istream& operator >> (std::istream& i, Quaternion& v) {
 		char ignore;
 		i >> std::skipws >> v.x >> ignore >> v.y >> ignore >> v.z >> ignore >> v.w >> std::noskipws;
 		return i;

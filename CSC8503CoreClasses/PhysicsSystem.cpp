@@ -13,7 +13,7 @@ using namespace NCL;
 using namespace CSC8503;
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
-	applyGravity	= false;
+	applyGravity	= true;
 	useBroadPhase	= false;	
 	dTOffset		= 0.0f;
 	globalDamping	= 0.995f;
@@ -67,7 +67,7 @@ float realDT	= idealDT;
 void PhysicsSystem::Update(float dt) {	
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::B)) {
 		useBroadPhase = !useBroadPhase;
-		std::cout << "Setting broadphase to " << useBroadPhase << std::endl;
+		std::cout << "Setting broad phase to " << useBroadPhase << std::endl;
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::N)) {
 		useSimpleContainer = !useSimpleContainer;
@@ -255,7 +255,9 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	Vector3 inertiaB = Vector3::Cross(physB->GetInertiaTensor() * Vector3::Cross(relativeB, p.normal), relativeB);
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 
-	float cRestitution = 0.66f; //disperse some kinectic energy
+
+
+	float cRestitution = physA->GetCoeficient() + physB->GetCoeficient(); //use coeficient to lose energy
 
 	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 
@@ -347,7 +349,7 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		Vector3 accel = force * inverseMass;
 
 		if (applyGravity && inverseMass > 0) {
-			accel += gravity; //don’t move infinitely heavy things
+			accel += gravity; //dont move infinitely heavy things
 		}
 
 		

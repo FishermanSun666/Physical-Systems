@@ -248,12 +248,12 @@ bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Trans
 		Vector3 minB = boxBPos - boxBSize;
 
 		float distances[6] = {
-			(maxB.x - minA.x) ,// distance of box ’b’ to ’left ’ of ’a ’.
-			(maxA.x - minB.x) ,// distance of box ’b’ to ’right ’ of ’a ’.
-			(maxB.y - minA.y) ,// distance of box ’b’ to ’bottom ’ of ’a ’.
-			(maxA.y - minB.y) ,// distance of box ’b’ to ’top ’ of ’a ’.
-			(maxB.z - minA.z) ,// distance of box ’b’ to ’far ’ of ’a ’.
-			(maxA.z - minB.z) // distance of box ’b’ to ’near ’ of ’a ’.
+			(maxB.x - minA.x) ,// distance of box ’b?to ’left ?of ’a ?
+			(maxA.x - minB.x) ,// distance of box ’b?to ’right ?of ’a ?
+			(maxB.y - minA.y) ,// distance of box ’b?to ’bottom ?of ’a ?
+			(maxA.y - minB.y) ,// distance of box ’b?to ’top ?of ’a ?
+			(maxB.z - minA.z) ,// distance of box ’b?to ’far ?of ’a ?
+			(maxA.z - minB.z) // distance of box ’b?to ’near ?of ’a ?
 		};
 		float penetration = FLT_MAX;
 		Vector3 bestAxis;
