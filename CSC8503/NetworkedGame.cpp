@@ -105,11 +105,7 @@ void NetworkedGame::BroadcastSnapshot(bool deltaFrame) {
 		if (!o) {
 			continue;
 		}
-		//TODO - you'll need some way of determining
-		//when a player has sent the server an acknowledgement
-		//and store the lastID somewhere. A map between player
-		//and an int could work, or it could be part of a 
-		//NetworkPlayer struct. 
+		//TODO - you'll need some way of determining when a player has sent the server an acknowledgement and store the lastID somewhere. A map between player and an int could work, or it could be part of a NetworkPlayer struct. 
 		int playerState = 0;
 		GamePacket* newPacket = nullptr;
 		if (o->WritePacket(&newPacket, deltaFrame, playerState)) {

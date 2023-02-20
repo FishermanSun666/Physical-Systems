@@ -116,11 +116,6 @@ bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObje
 	return false;
 }
 
-
-/*
-Constraint Tutorial Stuff
-*/
-
 void GameWorld::AddConstraint(Constraint* c) {
 	constraints.emplace_back(c);
 }

@@ -33,7 +33,7 @@ namespace NCL::CSC8503 {
 		char	buttonstates[8];
 
 		ClientPacket() {
-			size = sizeof(ClientPacket);
+			size = sizeof(ClientPacket) - sizeof(GamePacket);
 		}
 	};
 
