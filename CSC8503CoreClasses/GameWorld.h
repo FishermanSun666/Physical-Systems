@@ -57,6 +57,10 @@ namespace NCL {
 			int GetWorldStateID() const {
 				return worldStateCounter;
 			}
+			void GetObjectsInTargetView(vector<GameObject*> &objects, Vector3 pos, Vector3 vec, float distance);
+
+			//void GetObjectSetRangeTwoObject(vector<GameObject*> objects, GameObject* objA, GameObject* objB);
+			//bool CheckObjectInRangePos(Vector3 boundryMax, Vector3 boundryMin, Vector3 posA, Vector3 posB);
 
 		protected:
 			std::vector<GameObject*> gameObjects;

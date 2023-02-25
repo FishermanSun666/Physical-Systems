@@ -43,7 +43,7 @@ namespace NCL {
 			void Kick(Vector3 dir) {
 				//dir.y += angleAmend;
 				dir.y += angleAmend;
-				GetPhysicsObject()->ClearForces();
+				//GetPhysicsObject()->ClearForces();
 				GetPhysicsObject()->SetLinearVelocity(dir * force);
 				//GetPhysicsObject()->ApplyLinearImpulse(dir * force);
 				//GetPhysicsObject()->AddForceAtPosition(dir * force, GetTransform().GetPosition());

@@ -10,6 +10,7 @@
 
 #include <stack>
 #include <corecrt_math_defines.h>
+#include <cmath>
 
 using namespace NCL;
 using namespace CSC8503;
@@ -91,14 +92,6 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	//InitMixedGridWorld(15, 15, 3.5f, 3.5f);
-	//stateObject
-	//testStateObject = AddStateObjectToWorld(Vector3(0, 15, 0));
-	//constraint
-	//BridgeConstraintTest();
-
-	//InitGameExamples();
-
 	//game
 	try {
 		InitMap();
@@ -127,7 +120,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 
 	Vector3 floorSize = Vector3(200, 2, 200);
 	AABBVolume* volume = new AABBVolume(floorSize);
-	floor->SetBoundingVolume((CollisionVolume*)volume);
+	floor->SetBoundingVolume((CollisionVolume*)volume, floorSize);
 	floor->GetTransform()
 		.SetScale(floorSize * 2)
 		.SetPosition(position);
@@ -155,7 +148,7 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
-	sphere->SetBoundingVolume((CollisionVolume*)volume);
+	sphere->SetBoundingVolume((CollisionVolume*)volume, sphereSize);
 
 	sphere->GetTransform()
 		.SetScale(sphereSize)
@@ -176,7 +169,7 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 	GameObject* cube = new GameObject();
 
 	AABBVolume* volume = new AABBVolume(dimensions);
-	cube->SetBoundingVolume((CollisionVolume*)volume);
+	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions);
 
 	cube->GetTransform()
 		.SetPosition(position)
@@ -195,9 +188,8 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	GameObject* apple = new GameObject();
-
 	SphereVolume* volume = new SphereVolume(0.5f);
-	apple->SetBoundingVolume((CollisionVolume*)volume);
+	apple->SetBoundingVolume((CollisionVolume*)volume, Vector3(0.5f, 0.5f, 0.5f));
 	apple->GetTransform()
 		.SetScale(Vector3(2, 2, 2))
 		.SetPosition(position);
@@ -217,7 +209,7 @@ StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	StateGameObject* apple = new StateGameObject();
 
 	SphereVolume* volume = new SphereVolume(0.5f);
-	apple->SetBoundingVolume((CollisionVolume*)volume);
+	apple->SetBoundingVolume((CollisionVolume*)volume, Vector3(0.5f, 0.5f, 0.5f));
 	apple->GetTransform()
 		.SetScale(Vector3(2, 2, 2))
 		.SetPosition(position);
@@ -315,38 +307,6 @@ void TutorialGame::UpdateGame(float dt) {
 }
 
 void TutorialGame::UpdateKeys() {
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-	//	InitWorld(); //We can reset the simulation at any time with F1
-	//	selectionObject = nullptr;
-	//}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
-	//	InitCamera(); //F2 will reset the camera to a specific default place
-	//}
-
-	////default use of gravity.
-	////if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
-	////	useGravity = !useGravity; //Toggle gravity!
-	////	physics->UseGravity(useGravity);
-	////}
-
-	////Running certain physics updates in a consistent order might cause some
-	////bias in the calculations - the same objects might keep 'winning' the constraint
-	////allowing the other one to stretch too much etc. Shuffling the order so that it
-	////is random every frame can help reduce such bias.
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F9)) {
-	//	world->ShuffleConstraints(true);
-	//}
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F10)) {
-	//	world->ShuffleConstraints(false);
-	//}
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F7)) {
-	//	world->ShuffleObjects(true);
-	//}
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
-	//	world->ShuffleObjects(false);
-	//}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P)) {
 		pause = !pause;
@@ -362,10 +322,6 @@ void TutorialGame::LockedObjectMovement() {
 	Matrix4 camWorld = view.Inverse();
 
 	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
-
-	//forward is more tricky -  camera forward is 'into' the screen...
-	//so we can take a guess, and use the cross of straight up, and
-	//the right axis, to hopefully get a vector that's good enough!
 
 	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
 	fwdAxis.y = 0.0f;
@@ -392,43 +348,30 @@ void TutorialGame::DebugObjectMovement() {
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM7)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM8)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -10));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, 10));
 		}
-
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
 		}
 	}
 }
-/*
-Every frame, this code will let you perform a raycast, to see if there's an object
-underneath the cursor, and if so 'select it' into a pointer, so that it can be 
-manipulated later. Pressing Q will let you toggle between this behaviour and instead
-letting you move the camera around. 
 
-*/
 bool TutorialGame::SelectObject() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Q)) {
 		inSelectionMode = !inSelectionMode;
@@ -480,12 +423,6 @@ bool TutorialGame::SelectObject() {
 	return false;
 }
 
-/*
-If an object has been clicked, it can be pushed with the right mouse button, by an amount
-determined by the scroll wheel. In the first tutorial this won't do anything, as we haven't
-added linear motion into our physics system. After the second tutorial, objects will move in a straight
-line - after the third, they'll be able to twist under torque aswell.
-*/
 void TutorialGame::RayCast() {
 	RayCollision closestCollision;
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::K) && selectionObject) {
@@ -585,7 +522,6 @@ void TutorialGame::InitGameObjects() {
 	//only 3 path
 	int pathNum = 2;
 	vector<vector<Vector3>> patrolTargets(pathNum);
-	Vector3 docPos = Vector3(0, 0, 0);
 	for (int i = 0; i < mapSize; i++) {
 		GridNode node = allNodes[i];
 		switch (node.type) {
@@ -622,34 +558,21 @@ void TutorialGame::InitGameObjects() {
 		case ('g'):
 			//goal
 			goalObject = AddGoalToWorld(node.position);
-		case ('d'):
-			docPos = node.position;
-			
+			continue;
 		default:
 			//char to int
 			int index = node.type - '0';
-			if (index < 0 || index >= pathNum) {
-				continue;
-			}
+			if (index < 0 || index >= pathNum) { continue; }
 			patrolTargets[index].push_back(node.position);
 		}
 	}
-	if (docPos != Vector3(0, 0, 0)) {
-		AddGoalDocrationToWorld(docPos);
-	}
 	int index = 0;
 	for (auto i : enemyObjects) {
-		if (index >= pathNum) {
-			break;
-		}
+		if (index >= pathNum) { break;}
 		auto target = patrolTargets[index];
-		if (target.empty()) {
-			continue;
-		}
-		//change
-		if (index != 0) {
-			reverse(target.begin(), target.end());
-		}
+		if (target.empty()) { continue; }
+		//change dir
+		if (index != 0) { reverse(target.begin(), target.end()); }
 		i->InitialiseBehaviours(target);
 		index++;
 	}
@@ -657,16 +580,16 @@ void TutorialGame::InitGameObjects() {
 }
 
 GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
-	float meshSize = 2.0f;
+	float scale = 2.0f;
 	float inverseMass = 0.1f;
 
 	GameEnemy* character = new GameEnemy("Enemy");
-
-	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.8f) * meshSize);
-	character->SetBoundingVolume((CollisionVolume*)volume);
+	Vector3 size = Vector3(0.3f, 0.9f, 1.0f) * scale;
+	AABBVolume* volume = new AABBVolume(size);
+	character->SetBoundingVolume((CollisionVolume*)volume, size);
 
 	character->GetTransform()
-		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetScale(Vector3(scale, scale, scale))
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
@@ -674,6 +597,7 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
+	character->SetColour(Vector4(0.0f, 0.5f, 1.0f, 1.0f));
 
 	world->AddGameObject(character);
 
@@ -681,16 +605,16 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 }
 
 GamePlayer* TutorialGame::AddPlayerToWorld(const Vector3& position) {
-	float meshSize = 1.0f;
+	float scale = 1.0f;
 	float inverseMass = 0.5f;
 
 	GamePlayer* character = new GamePlayer("Player");
-	SphereVolume* volume = new SphereVolume(meshSize);
+	SphereVolume* volume = new SphereVolume(scale);
 
-	character->SetBoundingVolume((CollisionVolume*)volume);
+	character->SetBoundingVolume((CollisionVolume*)volume, Vector3(scale, scale, scale));
 
 	character->GetTransform()
-		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetScale(Vector3(scale, scale, scale))
 		.SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
@@ -709,10 +633,8 @@ GameBall* TutorialGame::AddBallToWorld(const Vector3& position) {
 	GameBall* ball = new GameBall("Ball");
 
 	SphereVolume* volume = new SphereVolume(0.5f);
-	ball->SetBoundingVolume((CollisionVolume*)volume);
-	ball->GetTransform()
-		.SetScale(Vector3(0.5, 0.5, 0.5))
-		.SetPosition(position);
+	ball->SetBoundingVolume((CollisionVolume*)volume, Vector3(0.5f, 0.5f, 0.5f));
+	ball->GetTransform().SetScale(Vector3(0.5, 0.5, 0.5)).SetPosition(position);
 
 	ball->SetRenderObject(new RenderObject(&ball->GetTransform(), sphereMesh, nullptr, basicShader));
 	ball->SetPhysicsObject(new PhysicsObject(&ball->GetTransform(), ball->GetBoundingVolume()));
@@ -728,15 +650,15 @@ GameBall* TutorialGame::AddBallToWorld(const Vector3& position) {
 }
 
 GameObject* TutorialGame::AddGoalToWorld(const Vector3& position) {
-	float meshSize = 4.0f;
+	float scale = 4.0f;
 
 	GameObject* goal = new GameObject();
-
-	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
-	goal->SetBoundingVolume((CollisionVolume*)volume);
+	Vector3 size = Vector3(0.3f, 0.9f, 0.3f) * scale;
+	AABBVolume* volume = new AABBVolume(size);
+	goal->SetBoundingVolume((CollisionVolume*)volume, size);
 
 	goal->GetTransform()
-		.SetScale(Vector3(meshSize, meshSize, meshSize))
+		.SetScale(Vector3(scale, scale, scale))
 		.SetPosition(position);
 
 	goal->SetRenderObject(new RenderObject(&goal->GetTransform(), goalMesh, nullptr, basicShader));
@@ -754,14 +676,13 @@ GameObject* TutorialGame::AddGoalToWorld(const Vector3& position) {
 	return goal;
 }
 
-GameObject* TutorialGame::AddGoalDocrationToWorld(const Vector3& position) {
-	GameObject* doc = new GameObject("Docration");
-
-	SphereVolume* volume = new SphereVolume(0.5f);
-	doc->SetBoundingVolume((CollisionVolume*)volume);
-	doc->GetTransform()
-		.SetScale(Vector3(0.5, 0.5, 0.5))
-		.SetPosition(position);
+GameObject* TutorialGame::AddGoalDeocrationToWorld(const Vector3& position) {
+	GameObject* doc = new GameObject("Decoration");
+	float scale = 0.5f;
+	Vector3 size = Vector3(scale, scale, scale);
+	SphereVolume* volume = new SphereVolume(scale);
+	doc->SetBoundingVolume((CollisionVolume*)volume, size);
+	doc->GetTransform().SetScale(size).SetPosition(position);
 
 	doc->SetRenderObject(new RenderObject(&doc->GetTransform(), enemyMesh, nullptr, basicShader));
 	doc->SetPhysicsObject(new PhysicsObject(&doc->GetTransform(), doc->GetBoundingVolume()));
@@ -774,7 +695,6 @@ GameObject* TutorialGame::AddGoalDocrationToWorld(const Vector3& position) {
 		PositionConstraint* contraint = new PositionConstraint(goalObject, doc, 5);
 		world->AddConstraint(contraint);
 	}
-
 	return doc;
 }
 
@@ -783,9 +703,8 @@ void TutorialGame::CameraLockOnPlayer() {
 	//find object orientation
 	float yrot = playerObject->GetTransform().GetOrientation().ToEuler().y;
 	//set camera position
-	Vector3 viewOffset = Vector3(playerViewOffset.x * cos((yrot + 270.0f) * M_PI / 180), playerViewOffset.y, playerViewOffset.z * sin((yrot - 270.0f) * M_PI / 180));
-	Vector3 camPos = objPos + viewOffset;
-
+	Vector3 offSet = Vector3(viewOffset.x * cos((yrot + 270.0f) * M_PI / 180), viewOffset.y, viewOffset.z * sin((yrot - 270.0f) * M_PI / 180));
+	Vector3 camPos = objPos + offSet;
 	//lock on object
 	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
 	Matrix4 modelMat = temp.Inverse();
@@ -798,22 +717,20 @@ void TutorialGame::CameraLockOnPlayer() {
 }
 
 void TutorialGame::UpdateGameObject(float dt) {
+	if (gameover) { return; }
 	if (!playerObject->InReviveTime()) {
 		PlayerObjectMovement();
 	}
-	//goal
-	Goal();
-
 	//update player info;
-	UpdatePlayerInfo(dt);
+	UpdatePlayerState(dt);
 	//kick ball
 	KickBall(dt);
 	//catch ball
-	CheckBallStatus();
+	CheckBallState();
 	//update enemy
-	UpdateEnemeys(dt);
+	UpdateEnemyState(dt);
 	//player live check
-	KillPlayer();
+	CheckPlayerDead();
 }
 
 void TutorialGame::PlayerObjectMovement() {
@@ -821,28 +738,18 @@ void TutorialGame::PlayerObjectMovement() {
 	Matrix4 camWorld = view.Inverse();
 
 	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
-
-	//forward is more tricky -  camera forward is 'into' the screen...
-	//so we can take a guess, and use the cross of straight up, and
-	//the right axis, to hopefully get a vector that's good enough!
-
 	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
 	fwdAxis.y = 0.0f;
 	fwdAxis.Normalise();
 	rightAxis.Normalise();
 
 	Transform& transform = playerObject->GetTransform();
-
 	//orientation
 	float dirVal = Window::GetMouse()->GetRelativePosition().x;
-	while (180 <= dirVal) {
-		dirVal -= 180;
-	}
+	while (180.0f <= dirVal) { dirVal -= 180.0f; }
 	Quaternion orientation = transform.GetOrientation();
-	float turnSpeed = playerObject->GetTurnSpeed();
-	orientation = orientation + (Quaternion(Vector3(0, -dirVal * turnSpeed, 0), 0.0f) * orientation);
-	orientation.Normalise();
-	transform.SetOrientation(orientation);
+	orientation = orientation + (Quaternion(Vector3(0, -dirVal * playerObject->GetTurnSpeed(), 0), 0.0f) * orientation);
+	transform.SetOrientation(orientation.Normalised());
 	//linear
 	float speed = 0.0f;
 	auto speedUp = [&]() {
@@ -856,19 +763,19 @@ void TutorialGame::PlayerObjectMovement() {
 	Vector3 position = transform.GetPosition();
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->SetLinearVelocity(fwdAxis * speed);
+		playerObject->GetPhysicsObject()->AddForce(fwdAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->SetLinearVelocity(-fwdAxis * speed);
+		playerObject->GetPhysicsObject()->AddForce(-fwdAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->SetLinearVelocity(-rightAxis * speed);
+		playerObject->GetPhysicsObject()->AddForce(-rightAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->SetLinearVelocity(rightAxis * speed);
+		playerObject->GetPhysicsObject()->AddForce(rightAxis * speed);
 	}
 	//clear player velocity
 	if (0.0f == speed) {
@@ -876,42 +783,53 @@ void TutorialGame::PlayerObjectMovement() {
 	}
 }
 
-void TutorialGame::UpdatePlayerInfo(float dt) {
+void TutorialGame::UpdatePlayerState(float dt) {
 	playerObject->Update(dt);
 }
 
-void TutorialGame::UpdateEnemeys(float dt) {
-	for (auto i = enemyObjects.begin(); i != enemyObjects.end(); i++) {
-		GameEnemy* enemy = (*i);
-		//check whether player in enemy view.
-		Vector3 enemyDir = enemy->GetTransform().GetOrientation() * Vector3(0, 0, -1);
-		Ray sightLine = Ray(enemy->GetTransform().GetPosition(), enemyDir);
-		//object volume multi 3
-		auto playerVolume = (SphereVolume*)playerObject->GetBoundingVolume();
-		GameObject temp;
-		auto tempVolume = new SphereVolume(playerVolume->GetRadius() * 4);
-		temp.SetBoundingVolume((CollisionVolume*)tempVolume);
-		temp.SetTrasform(playerObject->GetTransform());
-		RayCollision collision;
-		if (CollisionDetection::RayIntersection(sightLine, temp, collision)) {
-			//in view track
-			enemy->SetColour(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-			enemy->StartTrackingPlayer(playerObject->GetTransform().GetPosition());
+//check for position in enemy's view
+//@param pos - player's position
+//@param enemy - enemy object
+bool TutorialGame::CheckPositionInEnemyView(Vector3 pos, GameEnemy* enemy) {
+	if (!enemy) { return false; }
+	if (!enemy->CheckPositionInView(pos)) { return false; }
+	//check for objects blocking the vie
+	Vector3 enemyPos = enemy->GetTransform().GetPosition();
+	Vector3 vecEtoP = pos - enemyPos;
+	float dist = NCL::Maths::Distance(enemyPos, pos);
+	vector<GameObject*> objects;
+	world->GetObjectsInTargetView(objects, enemyPos, vecEtoP, dist);
+	auto ray = Ray(enemyPos, vecEtoP.Normalised());
+	RayCollision collision;
+	for (auto object : objects) {
+		if (CollisionDetection::RayIntersection(ray, *object, collision)) {
+			return false;
 		}
-		else {
-			//out of view, give up
-			enemy->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-			if (enemy->TrackingPlayer()) {
-				enemy->LostPlayer();
+	}
+	return true;
+}
+
+void TutorialGame::UpdateEnemyState(float dt) {
+	Vector3 playerPos = playerObject->GetTransform().GetPosition();
+	for (auto enemy : enemyObjects) {
+		if (CheckPositionInEnemyView(playerPos, enemy)) {
+			if (!enemy->TrackingPlayer()) {
+				enemy->SetColour(Vector4(1.0f, 0.0f, 0.0f, 1.0f)); //become red
 			}
+			enemy->StartTrackingPlayer(playerObject->GetTransform().GetPosition()); //update player' position
 		}
-		//update behaviour
-		enemy->UpdateBehaviour(dt);
+		else if (enemy->TrackingPlayer()) {
+			enemy->SetColour(Vector4(0.0f, 0.5f, 1.0f, 1.0f));
+			enemy->LostPlayer();
+		}
+		//update action
+		enemy->UpdateAction(dt);
 	}
 }
 
+
 bool TutorialGame::KickBall(float dt) {
-	if (!playerObject->KeepBall()) {
+	if (!playerObject->CheckCatchBall()) {
 		return false;
 	}
 	if (Window::GetMouse()->ButtonHeld(NCL::MouseButtons::LEFT)) {
@@ -929,10 +847,9 @@ bool TutorialGame::KickBall(float dt) {
 		//change angle
 		float changeAngle = -Window::GetMouse()->GetRelativePosition().y;
 		ballObject->AddKickAngle(changeAngle * 0.01);
-		std::cout << "kick angle: " << ballObject->GetAngleAmend() << std::endl;
 		if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
 			//cut constraint
-			if (playerObject->KeepBall()) {
+			if (playerObject->CheckCatchBall()) {
 				auto cons = playerObject->LostBall();
 				world->RemoveConstraint(cons, true);
 			}
@@ -949,43 +866,43 @@ bool TutorialGame::Goal() {
 	if (!CollisionDetection::ObjectIntersection(goalObject, ballObject, info)) {
 		return false;
 	}
-
 	//put back ball
 	ballObject->Reset();
 	//cut constraint
-	if (playerObject->KeepBall()) {
+	if (playerObject->CheckCatchBall()) {
 		auto cons = playerObject->LostBall();
 		world->RemoveConstraint(cons, true);
 	}
-	
-	//goal
-	goalTime = g_goal_tip_time;
-	playerObject->AddScore(g_goal_score);
+	goalTime = GOAL_TIP_TIME;
+	playerObject->AddScore(GOAL_SCORE);
 	return true;
 }
 
-bool TutorialGame::CheckBallStatus() {
-	if (playerObject->KeepBall()) {
-		return true;
-	}
+void TutorialGame::CheckBallState() {
+	//goal
+	if (Goal()) { return; }
+	//catch ball
+	if (playerObject->CheckCatchBall()) { return; }
 	//check collision detection
 	CollisionDetection::CollisionInfo info;
-	if (!CollisionDetection::ObjectIntersection(playerObject, ballObject, info)) {
-		return false;
-	}
-
+	if (!CollisionDetection::ObjectIntersection(playerObject, ballObject, info)) { return; }
 	PositionConstraint* contraint = new PositionConstraint(playerObject, ballObject, 2);
 	world->AddConstraint(contraint);
 	playerObject->CatchBall(contraint);
-	std::cout << "catch ball!!" << std::endl;
+	std::cout << "player catch ball!!" << std::endl;
 }
 
-void TutorialGame::KillPlayer() {
+void TutorialGame::CheckPlayerDead() {
+	if (playerObject->GameOver() && !gameover) { 
+		gameover = true; 
+		return;
+	}
 	CollisionDetection::CollisionInfo collision;
 	for (auto& i : enemyObjects) {
 		GameEnemy* enemy = i;
+		if (!enemy->TrackingPlayer()) { continue; }
 		if (CollisionDetection::ObjectIntersection(enemy, playerObject, collision)) {
-			if (playerObject->KeepBall()) {
+			if (playerObject->CheckCatchBall()) {
 				//take the ball
 				auto cons = playerObject->LostBall();
 				world->RemoveConstraint(cons, true);
@@ -993,7 +910,7 @@ void TutorialGame::KillPlayer() {
 				ballObject->Reset();
 			}
 			//player dead
-			playerObject->Revive(g_player_revive_time);
+			playerObject->Revive();
 		}
 	}
 }
@@ -1050,10 +967,9 @@ void TutorialGame::UpdateScreenInfo(float dt) {
 		}
 		//print ball info
 		if (nullptr != ballObject) {
-			if (Window::GetMouse()->ButtonHeld(NCL::MouseButtons::LEFT) && playerObject->KeepBall()) {
+			if (Window::GetMouse()->ButtonHeld(NCL::MouseButtons::LEFT) && playerObject->CheckCatchBall()) {
 				Vector3 line = playerObject->GetTransform().GetOrientation() * Vector3(0.0f, 0.0f, -1.0f);
 				line.y += ballObject->GetAngleAmend();
-
 				//write orientaion line 
 				Vector3 offset = Vector3::Cross(line, Vector3(0, 1, 0));
 				offset.Normalise();
@@ -1074,12 +990,9 @@ void TutorialGame::ResetGame() {
 	pause = false;
 	gameover = false;
 	delete mapPathFinding;
-	delete ballObject;
-	delete goalObject;
-	delete playerObject;
-	for (auto i : enemyObjects) {
-		delete i;
-	}
+	ballObject = nullptr;
+	goalObject = nullptr;
+	playerObject = nullptr;
 	enemyObjects = std::vector<GameEnemy*>();
 	InitWorld();
 }

@@ -9,9 +9,13 @@
 #include "GameEnemy.h"
 #include "GameBall.h"
 #include "NavigationGrid.h"
+#include "../NCLCoreClasses/Maths.h"
 
 namespace NCL {
 	namespace CSC8503 {
+#define GOAL_SCORE 20
+#define GOAL_TIP_TIME 3.0f
+
 		class TutorialGame		{
 		public:
 			TutorialGame();
@@ -68,16 +72,18 @@ namespace NCL {
 			GameEnemy* AddEnemyToWorld(const Vector3& position);
 			GameBall* AddBallToWorld(const Vector3& position);
 			GameObject* AddGoalToWorld(const Vector3& position);
-			GameObject* AddGoalDocrationToWorld(const Vector3& position);
+			GameObject* AddGoalDeocrationToWorld(const Vector3& position);
 
 			void PlayerObjectMovement();
 			void InitMap();
-			bool CheckBallStatus();
-			void UpdatePlayerInfo(float dt);
-			void UpdateEnemeys(float dt);
+			void CheckBallState();
+			void UpdatePlayerState(float dt);
+			bool CheckPositionInEnemyView(Vector3 pos, GameEnemy* enemy);
+			void UpdateEnemyState(float dt);
+			bool CheckPlayerInEnemyView(GameEnemy* enemy);
 			bool KickBall(float dt);
 			bool Goal();
-			void KillPlayer();
+			void CheckPlayerDead();
 
 
 #ifdef USEVULKAN
@@ -116,16 +122,10 @@ namespace NCL {
 			}
 
 			GameObject* objClosest = nullptr;
-
-			//game
-			float g_player_revive_time = 5.0f;
-			int g_goal_score = 20;
-			float g_goal_tip_time = 3.0f;
-
 			bool pause = false;
 			bool gameover = false;
 			float goalTime = 0;
-			Vector3 playerViewOffset = Vector3(5, 1, 5);
+			Vector3 viewOffset = Vector3(5, 1, 5);
 
 			NavigationGrid* mapPathFinding = nullptr;
 			GameBall* ballObject = nullptr;

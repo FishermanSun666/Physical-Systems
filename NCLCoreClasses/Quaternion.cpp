@@ -181,9 +181,9 @@ Vector3 Quaternion::ToEuler() const {
 	float sqy = y*y;
 	float sqz = z*z;
 
-	euler.z = Maths::RadiansToDegrees(asin(2 * t));
-	euler.y = Maths::RadiansToDegrees(atan2(2 * y*w - 2 * x*z, 1.0f - 2 * sqy - 2 * sqz));
-	euler.x = Maths::RadiansToDegrees(atan2(2 * x*w - 2 * y*z, 1.0f - 2 * sqx - 2.0f*sqz));
+	euler.z = Maths::RadiansToDegrees(asin(2.0f * t));
+	euler.y = Maths::RadiansToDegrees(atan2(2.0f * y*w - 2.0f * x*z, 1.0f - 2.0f * sqy - 2.0f * sqz));
+	euler.x = Maths::RadiansToDegrees(atan2(2.0f * x*w - 2.0f * y*z, 1.0f - 2.0f * sqx - 2.0f*sqz));
 
 	return euler;
 }

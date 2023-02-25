@@ -4,15 +4,20 @@
 #include "GameObject.h"
 #include "NavigationGrid.h"
 #include "BehaviourSequence.h"
-//#include "BehaviourSelector.h"
 #include "PushdownMachine.h"
-
+#include <corecrt_math_defines.h>
 #include "GamePlayer.h"
 #include "GameEnemyAction.h"
 #include "GameEnemyPatrolling.h"
+#include "../NCLCoreClasses/Maths.h"
 
 using namespace NCL;
 using namespace CSC8503;
+
+#define ENEMY_SIGHT_LINE 30.0f
+#define ENEMY_SIGHT_RANGE_DEGREE 60.0f
+#define ENEMY_SPEED 10.0f
+#define ENEMY_ARRIVE_OFFSET 2.0f
 
 class Debug;
 class PhysicsObject;
@@ -20,10 +25,7 @@ class PhysicsObject;
 class GameEnemy : public GameObject {
 private:
 
-	float g_enemy_speed1 = 10.0f;
-	float g_enemy_arrive_offset = 2.0f;
-
-	float speed = g_enemy_speed1;
+	float speed = ENEMY_SPEED;
 	//pathFinding
 	Vector3 moveTarget;
 	Vector3 playerPosition;
@@ -51,13 +53,10 @@ public:
 	}
 
 	bool PathFinding(const Vector3& target) {
-		if (nullptr == map) {
-			std::cout << "map == null" << std::endl;
-			return false;
-		}
+		if (nullptr == map) { return false; }
 		Vector3 position = transform.GetPosition();
 		//catch target
-		if (g_enemy_arrive_offset * 4 >= (position - target).Length()) {
+		if (ENEMY_ARRIVE_OFFSET * 4 >= (position - target).Length()) {
 			moveTarget = target;
 			return true;
 		}
@@ -72,7 +71,7 @@ public:
 		outPath.PopWaypoint(moveTarget);
 		while (outPath.PopWaypoint(toPos)) {
 			toPos.y = position.y;
-			if (g_enemy_arrive_offset*2 >= (position - toPos).Length()) {
+			if (ENEMY_ARRIVE_OFFSET*2 >= (position - toPos).Length()) {
 				//too close, find next position.
 				continue;
 			}
@@ -102,7 +101,7 @@ public:
 		//arrive
 		Vector3 pos = GetTransform().GetPosition();
 		target.y = pos.y;
-		if (g_enemy_arrive_offset >= (pos - target).Length()) {
+		if (ENEMY_ARRIVE_OFFSET >= (pos - target).Length()) {
 			return false;
 		}
 		PathFinding(target);
@@ -175,7 +174,7 @@ public:
 		return patrolling;
 	}
 
-	void UpdateBehaviour(float dt) {
+	void UpdateAction(float dt) {
 		if (aiManager == nullptr) {
 			return;
 		}
@@ -184,10 +183,10 @@ public:
 
 	bool CheckPositionInView(Vector3 pos) {
 		Vector3 vecEtoP = pos - transform.GetPosition();
-		if (vecEtoP.Length() > ENEMY_SIGHT_LINE) { return false; } //over sight
-		Vector3 dirEtoP = vecEtoP.Normalised();
+		float distance = NCL::Maths::Distance(pos, transform.GetPosition());
+		if (distance > ENEMY_SIGHT_LINE) { return false; } //over sight
 		Vector3 dirE = transform.GetOrientation() * Vector3(0, 0, -1); // positive direction
-		float cosVal = Vector3::Dot(dirEtoP, dirE);
+		float cosVal = Vector3::Dot(vecEtoP.Normalised(), dirE.Normalised());
 		float degree = acos(cosVal) * 180.0f / M_PI;
 		if (degree > ENEMY_SIGHT_RANGE_DEGREE) { return false; }
 		return true;

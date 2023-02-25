@@ -3,6 +3,8 @@
 #include "Constraint.h"
 #include "CollisionDetection.h"
 #include "Camera.h"
+#include "../NCLCoreClasses/Maths.h"
+#include <corecrt_math_defines.h>
 
 
 using namespace NCL;
@@ -133,3 +135,55 @@ void GameWorld::GetConstraintIterators(
 	first	= constraints.begin();
 	last	= constraints.end();
 }
+
+//Get all objects oriented in the direction of this vector
+//@param objects - return
+//@param pos - start point
+//@param vec - direction
+void GameWorld::GetObjectsInTargetView(vector<GameObject*> &objects, Vector3 pos, Vector3 vec, float distance) {
+	for (auto object : gameObjects) {
+		if (object->GetName() == "Player" || object->GetName() == "Enemy") { continue; }
+		Vector3 ObjPos = object->GetTransform().GetPosition();
+		Vector3 vecTtoO = ObjPos - pos;
+		float lenTO = NCL::Maths::Distance(ObjPos, pos);
+		if (distance < lenTO) { continue; } //too far
+		float cosTOtoV = Vector3::Dot(vec.Normalised(), vecTtoO.Normalised());
+		if (90.0f < acos(cosTOtoV) * 180.0f / M_PI) { continue; } // The angle with the vector should be less than 90 degree
+		objects.push_back(object);
+	}
+}
+
+
+
+////Get all objects in the square range between two objects
+//void GameWorld::GetObjectSetRangeTwoObject(vector<GameObject*> objects, GameObject* objA, GameObject* objB) {
+//	if (!objA || !objB) { return; }
+//	Vector3 posA = objA->GetTransform().GetPosition();
+//	Vector3 posB = objB->GetTransform().GetPosition();
+//	for (auto obj : gameObjects) {
+//		if (obj->GetWorldID() == objA->GetWorldID() || obj->GetWorldID() == objB->GetWorldID()) { continue; } //not include thenself;
+//		auto posT = obj->GetTransform().GetPosition();
+//		auto boundryMax = obj->GetBoundry() + posT;
+//		auto boundryMin = posT - obj->GetBoundry();
+//		if (CheckObjectInRangePos(boundryMax, boundryMin, posA, posB)) { objects.push_back(obj); }
+//	}
+//}
+////Check if the object is between two position
+//bool GameWorld::CheckObjectInRangePos(Vector3 boundryMax, Vector3 boundryMin, Vector3 posA, Vector3 posB) {
+//	if (posA.x > posB.x) {
+//		if (boundryMax.x < posB.x || boundryMin.x > posA.x) { return false; }
+//		if (posA.z > posB.z) {
+//			if (boundryMax.z < posB.z || boundryMin.z > posA.z) { return false; }
+//			return true;
+//		}
+//		if (boundryMax.z < posA.z || boundryMin.z > posB.z) { return false; }
+//		return true;
+//	}
+//	if (boundryMax.x < posA.x || boundryMin.x > posB.x) { return false; }
+//	if (posA.z > posB.z) {
+//		if (boundryMax.z < posB.z || boundryMin.z > posA.z) { return false; }
+//		return true;
+//	}
+//	if (boundryMax.z < posA.z || boundryMin.z > posB.z) { return false; }
+//	return true;
+//}

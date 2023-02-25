@@ -45,5 +45,12 @@ namespace NCL {
 				Clamp(a.z, mins.z, maxs.z)
 			);
 		}
+
+		float Distance(const Vector3& a, const Vector3& b) {
+			float dx = b.x - a.x;
+			float dy = b.y - a.y;
+			float dz = b.z - a.z;
+			return sqrt(dx * dx + dy * dy + dz * dz);
+		}
 	}
 }

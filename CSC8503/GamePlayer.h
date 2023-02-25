@@ -6,14 +6,14 @@
 
 namespace NCL {
 	namespace CSC8503 {
+#define PLAYER_LIVE_TIME 60.0f
+#define PLAYER_RIVIVE_TIME 5.0f
 		class PositionConstraint;
 		class GamePlayer : public GameObject {
 		protected:
-			float g_game_live_time = 60.0f;
-
 			bool prapare = true;
 			int score = 0;
-			float liveTime = g_game_live_time;
+			float liveTime = PLAYER_LIVE_TIME;
 			float reviveTime = 3.0f;
 			float speed = 8.0f;
 			float quickSpeed = 15.0f;
@@ -28,13 +28,13 @@ namespace NCL {
 				State* reviveTiming = new State(
 					[&](float dt)->void {
 						if (!prapare) {
-							liveTime -= dt;
+							liveTime = liveTime < dt ? 0.0f : liveTime - dt; // prapare time
 						}
 						reviveTime -= dt;
 					});
 				State* liveTiming = new State(
 					[&](float dt)->void {
-						liveTime -= dt;
+						liveTime = liveTime < dt? 0.0f : liveTime - dt;
 					});
 				
 				StateTransition* revive = new StateTransition(liveTiming, reviveTiming,
@@ -43,14 +43,14 @@ namespace NCL {
 					});
 				StateTransition* live = new StateTransition(reviveTiming, liveTiming,
 					[&](void)->bool {
-						bool ret = reviveTime <= 0;
-						if (ret) {
+						if (reviveTime <= 0) {
 							//prapare time
 							if (prapare) {
 								prapare = false;
 							}
+							return true;
 						}
-						return ret;
+						return false;
 					});
 				stateManager->AddState(reviveTiming);
 				stateManager->AddState(liveTiming);
@@ -78,13 +78,13 @@ namespace NCL {
 			void Update(float dt) {
 				stateManager->Update(dt);
 			}
-			void Revive(float tm) {
-				reviveTime = tm;
+			void Revive() {
+				reviveTime = PLAYER_RIVIVE_TIME;
 				GetTransform().SetPosition(originPos);
 				GetPhysicsObject()->SetLinearVelocity(Vector3(0, 0, 0));
 			}
 
-			bool KeepBall() { return catchBall != nullptr; }
+			bool CheckCatchBall() { return catchBall != nullptr; }
 			bool GameOver() { return 0 >= liveTime; }
 			bool InReviveTime() { return reviveTime > 0; }
 			int GetScore() { return score; }

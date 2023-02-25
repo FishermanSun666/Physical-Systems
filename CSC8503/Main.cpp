@@ -83,8 +83,8 @@ void TestNetworking() {
 
 int main() {
 	//test networking
-	TestNetworking();
-	return 0;
+	//TestNetworking();
+	//return 0;
 
 	Window*w = Window::CreateGameWindow("Game technology!", 1280, 720);
 
@@ -95,15 +95,11 @@ int main() {
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);
 
-	//TestPushdownAutomata(w);
-	//TestBehaviourTree();
-
 	TutorialGame* g = new TutorialGame();
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a large first dt!
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 		if (dt > 0.1f) {
-			std::cout << "Skipping large time delta" << std::endl;
 			continue; //must have hit a breakpoint or something to have a 1 second frame time!
 		}
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::PRIOR)) {

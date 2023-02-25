@@ -16,12 +16,17 @@ namespace NCL::CSC8503 {
 		GameObject(std::string name = "");
 		~GameObject();
 
-		void SetBoundingVolume(CollisionVolume* vol) {
+		void SetBoundingVolume(CollisionVolume* vol, Vector3 bound) {
 			boundingVolume = vol;
+			boundary = bound;
 		}
 
 		const CollisionVolume* GetBoundingVolume() const {
 			return boundingVolume;
+		}
+
+		const Vector3 GetBoundry() const {
+			return boundary;
 		}
 
 		bool IsActive() const {
@@ -93,6 +98,7 @@ namespace NCL::CSC8503 {
 		RenderObject*		renderObject;
 		NetworkObject*		networkObject;
 
+		Vector3		boundary;
 		bool		isActive;
 		int			worldID;
 		std::string	name;
