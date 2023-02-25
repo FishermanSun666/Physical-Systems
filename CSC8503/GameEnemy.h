@@ -181,4 +181,15 @@ public:
 		}
 		aiManager->Update(dt);
 	}
+
+	bool CheckPositionInView(Vector3 pos) {
+		Vector3 vecEtoP = pos - transform.GetPosition();
+		if (vecEtoP.Length() > ENEMY_SIGHT_LINE) { return false; } //over sight
+		Vector3 dirEtoP = vecEtoP.Normalised();
+		Vector3 dirE = transform.GetOrientation() * Vector3(0, 0, -1); // positive direction
+		float cosVal = Vector3::Dot(dirEtoP, dirE);
+		float degree = acos(cosVal) * 180.0f / M_PI;
+		if (degree > ENEMY_SIGHT_RANGE_DEGREE) { return false; }
+		return true;
+	}
 };
