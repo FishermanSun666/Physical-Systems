@@ -37,7 +37,16 @@ namespace NCL {
 				return inverseMass;
 			}
 
+			void SetElasticity(float e) { elasticity = e > 1.0f ? 1.0f : e; }
+
+			float GetElasticity() { return elasticity; }
+
+			void SetFriction(float f) { friction = f > 1.0f ? 1.0f : f; }
+
+			float GetFriction() { return friction; }
+
 			void ApplyAngularImpulse(const Vector3& force);
+
 			void ApplyLinearImpulse(const Vector3& force);
 			
 			void AddForce(const Vector3& force);
@@ -47,7 +56,6 @@ namespace NCL {
 			void PrintForce();
 
 			void AddTorque(const Vector3& torque);
-
 
 			void ClearForces();
 

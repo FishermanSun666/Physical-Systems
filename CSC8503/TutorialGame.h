@@ -13,8 +13,8 @@
 
 namespace NCL {
 	namespace CSC8503 {
-#define GOAL_SCORE 20
-#define GOAL_TIP_TIME 3.0f
+		const int GOAL_SCORE = 20;
+		const float GOAL_TIP_TIME = 3.0f;
 
 		class TutorialGame		{
 		public:

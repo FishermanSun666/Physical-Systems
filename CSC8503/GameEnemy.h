@@ -14,10 +14,13 @@
 using namespace NCL;
 using namespace CSC8503;
 
-#define ENEMY_SIGHT_LINE 30.0f
-#define ENEMY_SIGHT_RANGE_DEGREE 60.0f
-#define ENEMY_SPEED 10.0f
-#define ENEMY_ARRIVE_OFFSET 2.0f
+const float ENEMY_SIGHT_LINE = 30.0f;
+const float ENEMY_SIGHT_RANGE_DEGREE = 60.0f;
+const float ENEMY_SPEED = 100.0f;
+const float	ENEMY_TRACKING_SPEED = 250.0f;
+const float ENEMY_ARRIVE_OFFSET = 2.0f;
+const Vector4 ENEMY_DEFAULT_COLOUR = Vector4(0.0f, 0.5f, 1.0f, 1.0f);
+const Vector4 ENEMY_TRACKING_COLOUR = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
 class Debug;
 class PhysicsObject;
@@ -44,9 +47,13 @@ public:
 	}
 	void StartTrackingPlayer(Vector3 pp) {
 		playerPosition = pp;
+		speed = ENEMY_TRACKING_SPEED;
+		SetColour(ENEMY_TRACKING_COLOUR);
 	}
 	void LostPlayer() {
-		this->playerPosition = Vector3(0, 0, 0);
+		playerPosition = Vector3();
+		speed = ENEMY_SPEED;
+		SetColour(ENEMY_DEFAULT_COLOUR);
 	}
 	bool TrackingPlayer() {
 		return (playerPosition != Vector3(0, 0, 0));
@@ -56,22 +63,20 @@ public:
 		if (nullptr == map) { return false; }
 		Vector3 position = transform.GetPosition();
 		//catch target
-		if (ENEMY_ARRIVE_OFFSET * 4 >= (position - target).Length()) {
+		if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(position, target)) {
 			moveTarget = target;
 			return true;
 		}
 		//find path
 		NavigationPath outPath;
 		bool found = map->FindPath(position, target, outPath);
-		if (!found) {
-			return false;
-		}
+		if (!found) { return false; }
 		//get next target
 		Vector3 toPos;
 		outPath.PopWaypoint(moveTarget);
 		while (outPath.PopWaypoint(toPos)) {
 			toPos.y = position.y;
-			if (ENEMY_ARRIVE_OFFSET*2 >= (position - toPos).Length()) {
+			if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(position, toPos)) {
 				//too close, find next position.
 				continue;
 			}
@@ -90,11 +95,10 @@ public:
 		Matrix4 modelMat = temp.Inverse();
 		Quaternion q(modelMat);
 		transform.SetOrientation(q);
-
 		//move
 		path.Normalise();
 		path.y = 0;
-		transform.SetPosition(transform.GetPosition() - path * speed * dt);
+		physicsObject->AddForce(-path * speed);
 	}
 
 	bool MoveToTarget(float dt, Vector3 target) {

@@ -129,7 +129,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->InitCubeInertia();
+	floor->GetPhysicsObject()->SetFriction(0.3f);
 
 	world->AddGameObject(floor);
 
@@ -166,18 +166,16 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 }
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
-	GameObject* cube = new GameObject();
+	GameObject* cube = new GameObject("Cube");
 
 	AABBVolume* volume = new AABBVolume(dimensions);
 	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions);
 
-	cube->GetTransform()
-		.SetPosition(position)
-		.SetScale(dimensions * 2);
+	cube->GetTransform().SetPosition(position).SetScale(dimensions * 2);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
-
+	cube->GetPhysicsObject()->SetElasticity(0.0f);
 	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
 	cube->GetPhysicsObject()->InitCubeInertia();
 
@@ -190,9 +188,7 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	GameObject* apple = new GameObject();
 	SphereVolume* volume = new SphereVolume(0.5f);
 	apple->SetBoundingVolume((CollisionVolume*)volume, Vector3(0.5f, 0.5f, 0.5f));
-	apple->GetTransform()
-		.SetScale(Vector3(2, 2, 2))
-		.SetPosition(position);
+	apple->GetTransform().SetScale(Vector3(2, 2, 2)).SetPosition(position);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), sphereMesh, nullptr, basicShader));
 	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
@@ -512,7 +508,7 @@ void TutorialGame::InitGameObjects() {
 	}
 	float wallSize = mapPathFinding->GetNodeSize();
 	//build map
-	Vector3 wallDimension = Vector3(wallSize, wallSize, wallSize) * 0.5f;
+	Vector3 wallDimension = Vector3(wallSize, wallSize * 3.0f, wallSize) * 0.5f;
 	GridNode* allNodes = mapPathFinding->GetAllNodes();
 	if (nullptr == allNodes) {
 		throw 1;
@@ -596,8 +592,7 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitSphereInertia();
-	character->SetColour(Vector4(0.0f, 0.5f, 1.0f, 1.0f));
+	character->SetColour(ENEMY_DEFAULT_COLOUR);
 
 	world->AddGameObject(character);
 
@@ -613,15 +608,13 @@ GamePlayer* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	character->SetBoundingVolume((CollisionVolume*)volume, Vector3(scale, scale, scale));
 
-	character->GetTransform()
-		.SetScale(Vector3(scale, scale, scale))
-		.SetPosition(position);
+	character->GetTransform().SetScale(Vector3(scale, scale, scale)).SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), charMesh, nullptr, basicShader));
+	character->SetColour(PLAYER_DEFAULT_COLOUR);
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitSphereInertia();
 	character->SetOriginPosition(position);
 
 	world->AddGameObject(character);
@@ -636,11 +629,11 @@ GameBall* TutorialGame::AddBallToWorld(const Vector3& position) {
 	ball->SetBoundingVolume((CollisionVolume*)volume, Vector3(0.5f, 0.5f, 0.5f));
 	ball->GetTransform().SetScale(Vector3(0.5, 0.5, 0.5)).SetPosition(position);
 
-	ball->SetRenderObject(new RenderObject(&ball->GetTransform(), sphereMesh, nullptr, basicShader));
+	ball->SetRenderObject(new RenderObject(&ball->GetTransform(), sphereMesh, basicTex, basicShader));
 	ball->SetPhysicsObject(new PhysicsObject(&ball->GetTransform(), ball->GetBoundingVolume()));
 
 	ball->GetPhysicsObject()->SetInverseMass(1.0f);
-	ball->GetPhysicsObject()->InitSphereInertia();
+	ball->GetPhysicsObject()->InitCubeInertia();
 	ball->SetColour(Vector4(1, 1, 0, 1));
 	ball->SetOriginPosition(position);
 
@@ -777,10 +770,10 @@ void TutorialGame::PlayerObjectMovement() {
 		speedUp();
 		playerObject->GetPhysicsObject()->AddForce(rightAxis * speed);
 	}
-	//clear player velocity
-	if (0.0f == speed) {
-		playerObject->GetPhysicsObject()->SetLinearVelocity(Vector3(0, playerObject->GetPhysicsObject()->GetLinearVelocity().y, 0));
-	}
+	////clear player velocity
+	//if (0.0f == speed) {
+	//	playerObject->GetPhysicsObject()->SetLinearVelocity(Vector3(0, playerObject->GetPhysicsObject()->GetLinearVelocity().y, 0));
+	//}
 }
 
 void TutorialGame::UpdatePlayerState(float dt) {
@@ -834,20 +827,22 @@ bool TutorialGame::KickBall(float dt) {
 	}
 	if (Window::GetMouse()->ButtonHeld(NCL::MouseButtons::LEFT)) {
 		//keep ball;
-		Vector3 playerDir = playerObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);
+		Vector3 playerDir = -playerObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);
 		playerDir.Normalise();
 		Vector3 playerPos = playerObject->GetTransform().GetPosition();
 		Vector3 tarPos = playerPos + playerDir * 4.0f;
 		//higher amend
 		tarPos.y += 1.0f;
 		ballObject->GetTransform().SetPosition(tarPos);
-		//add force;
-		ballObject->AddForce(dt*10.0f);
+		//change force;
+		if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::E)) { ballObject->IncreaseForce(dt * 500.0f); }
+		else if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::Q)) { ballObject->DecreaseForce(dt * 500.0f); }
 		//std::cout << "kick force: " << ballObject->GetForce() << std::endl;
 		//change angle
 		float changeAngle = -Window::GetMouse()->GetRelativePosition().y;
 		ballObject->AddKickAngle(changeAngle * 0.01);
 		if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
+			ballObject->GetPhysicsObject()->SetLinearVelocity(playerObject->GetPhysicsObject()->GetLinearVelocity());
 			//cut constraint
 			if (playerObject->CheckCatchBall()) {
 				auto cons = playerObject->LostBall();

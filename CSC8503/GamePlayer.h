@@ -6,8 +6,12 @@
 
 namespace NCL {
 	namespace CSC8503 {
-#define PLAYER_LIVE_TIME 60.0f
-#define PLAYER_RIVIVE_TIME 5.0f
+		const float PLAYER_LIVE_TIME = 60.0f;
+		const float PLAYER_RIVIVE_TIME = 5.0f;
+		const float PLAYER_SPEED_1 = 30.0f;
+		const float PLAYER_SPEED_2 = 50.0f;
+		const float PLAYER_TURN_SPEED = 0.02f;
+		const Vector4 PLAYER_DEFAULT_COLOUR = Vector4(0.0f, 0.0f, 0.0f, 1.0f);
 		class PositionConstraint;
 		class GamePlayer : public GameObject {
 		protected:
@@ -15,9 +19,9 @@ namespace NCL {
 			int score = 0;
 			float liveTime = PLAYER_LIVE_TIME;
 			float reviveTime = 3.0f;
-			float speed = 8.0f;
-			float quickSpeed = 15.0f;
-			float turnSpeed = 0.02;
+			float speed = PLAYER_SPEED_1;
+			float quickSpeed = PLAYER_SPEED_2;
+			float turnSpeed = PLAYER_TURN_SPEED;
 
 			Vector3 originPos;
 			StateMachine* stateManager;

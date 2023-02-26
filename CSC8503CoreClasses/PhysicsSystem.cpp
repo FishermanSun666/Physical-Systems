@@ -17,7 +17,7 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	useBroadPhase	= false;	
 	dTOffset		= 0.0f;
 	globalDamping	= 0.995f;
-	SetGravity(Vector3(0.0f, -9.8f, 0.0f));
+	SetGravity(GRAVITY);
 }
 
 PhysicsSystem::~PhysicsSystem()	{
@@ -255,18 +255,22 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	Vector3 inertiaB = Vector3::Cross(physB->GetInertiaTensor() * Vector3::Cross(relativeB, p.normal), relativeB);
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 
-
-
 	float cRestitution = physA->GetCoeficient() + physB->GetCoeficient(); //use coeficient to lose energy
 
 	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 
 	Vector3 fullImpulse = p.normal * j;
+
 	physA->ApplyLinearImpulse(-fullImpulse);
 	physB->ApplyLinearImpulse(fullImpulse);
-
-	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
-	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
+	//elasticity
+	float elasticity = (physA->GetElasticity() + physB->GetElasticity()) / 2.0f;
+	physA->SetLinearVelocity(physA->GetLinearVelocity() * elasticity);
+	physB->SetLinearVelocity(physB->GetLinearVelocity() * elasticity);
+	//friction gives angular rotation
+	float friction = (physA->GetFriction() + physB->GetFriction()) / 2.0f;
+	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -physA->GetLinearVelocity()));
+	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, -physB->GetLinearVelocity()));
 }
 
 /*
@@ -358,12 +362,11 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		
 		//Angular stuff
 		Vector3 torque = object->GetTorque();
+		//friction
+		object->SetAngularVelocity(object->GetAngularVelocity() * (1.0f - object->GetFriction() * dt));
 		Vector3 angVel = object->GetAngularVelocity();
-
 		object->UpdateInertiaTensor(); //update tensor vs orientation
-
 		Vector3 angAccel = object->GetInertiaTensor() * torque;
-
 		angVel += angAccel * dt; //integrate angular accel!
 		object->SetAngularVelocity(angVel);
 	}
@@ -380,7 +383,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector<GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
 	float frameLinearDamping = 1.0f - (0.4f * dt);
-
+	float frameAngularDamping = 1.0f - (0.4f * dt);
 	for (auto i = first; i != last; ++i) {
 		PhysicsObject* object = (*i)->GetPhysicsObject();
 		if (object == nullptr) {
@@ -406,7 +409,6 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		transform.SetOrientation(orientation);
 
 		//Damp the angular velocity too
-		float frameAngularDamping = 1.0f - (0.4f * dt);
 		angVel = angVel * frameAngularDamping;
 		object->SetAngularVelocity(angVel);
 	}

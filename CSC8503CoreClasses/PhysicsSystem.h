@@ -3,6 +3,8 @@
 
 namespace NCL {
 	namespace CSC8503 {
+		const Vector3 GRAVITY = Vector3(0.0f, -9.8f, 0.0f);
+
 		class PhysicsSystem	{
 		public:
 			PhysicsSystem(GameWorld& g);
@@ -15,6 +17,7 @@ namespace NCL {
 			void UseGravity(bool state) {
 				applyGravity = state;
 			}
+			Vector3 GetGravity() { return gravity; }
 
 			void SetGlobalDamping(float d) {
 				globalDamping = d;
