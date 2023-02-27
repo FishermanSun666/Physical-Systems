@@ -62,17 +62,18 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 Player resurrection control via state machine
 
-![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/state machine.gif)
+![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/state%20machine.gif)
 
 #### Simple Pathfinding
 
-![path finding](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/path finding.gif)
+![path finding](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/path%20finding.gif)
 
 #### Behaviour Trees
 
 Enemy action paths are controlled using behaviour trees
 
-![behavior trees](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/behavior trees.png)![behavior trees1](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/behavior trees1.png)
+![behavior trees](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/behavior%20trees.png)
+![behavior%20trees1](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/behavior%20trees1.png)
 
 #### Pushdown Automata && Object View
 
@@ -80,5 +81,5 @@ When an enemy sees a player it goes into tracking behaviour, and when it loses t
 
 The enemy's field of view is determined by calculating whether the angle between the vector from the enemy to the player and the direction of the enemy is less than a set value, and then checking whether there is a field of view obstacle between the enemy and the player by ray collision detection.
 
-![pushdown automata](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/pushdown automata.gif)
+![pushdown automata](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/pushdown%20automata.gif)
 
