@@ -11,8 +11,8 @@ https://research.ncl.ac.uk/game/
 
 #include "TextureLoader.h"
 
-using namespace PhysicalProject;
-using namespace PhysicalProject::Rendering;
+using namespace NCL;
+using namespace NCL::Rendering;
 
 OGLTexture::OGLTexture()
 {

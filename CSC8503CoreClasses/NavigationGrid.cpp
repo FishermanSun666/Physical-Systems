@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 const int LEFT_NODE		= 0;

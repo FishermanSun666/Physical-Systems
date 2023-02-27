@@ -6,7 +6,7 @@
 
 using std::vector;
 
-namespace PhysicalProject::GameDemo {
+namespace NCL::GameDemo {
 	class NetworkObject;
 	class RenderObject;
 	class PhysicsObject;

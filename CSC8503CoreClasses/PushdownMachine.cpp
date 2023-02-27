@@ -1,7 +1,7 @@
 #include "PushdownMachine.h"
 #include "PushdownState.h"
 
-using namespace PhysicalProject::GameDemo;
+using namespace NCL::GameDemo;
 
 PushdownMachine::PushdownMachine(PushdownState* initialState)
 {

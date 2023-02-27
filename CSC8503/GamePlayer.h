@@ -4,12 +4,12 @@
 #include "StateTransition.h"
 #include "State.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		const float PLAYER_LIVE_TIME = 60.0f;
 		const float PLAYER_RIVIVE_TIME = 5.0f;
-		const float PLAYER_SPEED_1 = 50.0f;
-		const float PLAYER_SPEED_2 = 150.0f;
+		const float PLAYER_SPEED_1 = 25.0f;
+		const float PLAYER_SPEED_2 = 50.0f;
 		const float PLAYER_SPEED_UP_LIMIT = 3.0f; //seconds
 		const float PLAYER_TURN_SPEED = 0.02f;
 		const Vector4 PLAYER_DEFAULT_COLOUR = Vector4(1.5f, 1.5f, 1.5f, 2.0f);
@@ -92,26 +92,30 @@ namespace PhysicalProject {
 			}
 
 			bool CheckCatchBall() { return catchBall != nullptr; }
-			bool GameOver() { return 0 >= liveTime; }
-			bool InReviveTime() { return restrictedTime > 0; }
+			bool CheckGameOver() { return 0 >= liveTime; }
+			bool CheckInReviveTime() { return restrictedTime > 0; }
+
 			int GetScore() { return score; }
 			float GetLiveTime() { return liveTime; }
 			float GetReviveTime() { return restrictedTime; }
 			float GetSpeed() { return speed; }
+			float GetQuickSpeed() { return quickSpeed; }
+			float GetTurnSpeed() { return turnSpeed; }
+
 			bool SpeedUp(float dt) {
 				if (speedUpTime >= PLAYER_SPEED_UP_LIMIT) { return false; }
 				speedUpTime += dt;
 				return true;
 			}
+
 			void RecoverStrength(float dt) {
 				speedUpTime = speedUpTime - dt < 0.0f ? 0.0f : speedUpTime - dt;
 			}
-			float GetQuickSpeed() { return quickSpeed; }
-			float GetTurnSpeed() { return turnSpeed; }
 
 			void CatchBall(PositionConstraint* cb) {
 				catchBall = cb;
 			}
+
 			PositionConstraint* LostBall() {
 				PositionConstraint* ret = catchBall;
 				catchBall = nullptr;

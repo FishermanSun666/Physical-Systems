@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "PhysicsSystem.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class GameBall : public GameObject {
 		protected:

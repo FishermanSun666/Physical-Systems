@@ -12,9 +12,9 @@ https://research.ncl.ac.uk/game/
 
 #include <string>
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace Rendering {
-		class OGLMesh : public PhysicalProject::MeshGeometry
+		class OGLMesh : public NCL::MeshGeometry
 		{
 		public:
 			friend class OGLRenderer;

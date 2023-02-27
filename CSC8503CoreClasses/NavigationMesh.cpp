@@ -2,7 +2,7 @@
 #include "Assets.h"
 #include "Maths.h"
 #include <fstream>
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 using namespace std;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "NavigationMap.h"
 #include <string>
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		struct GridNode {
 			GridNode* parent;

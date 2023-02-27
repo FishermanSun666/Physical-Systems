@@ -6,7 +6,7 @@
 
 #include "GameWorld.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	class Maths::Vector3;
 	class Maths::Vector4;
 	namespace GameDemo {

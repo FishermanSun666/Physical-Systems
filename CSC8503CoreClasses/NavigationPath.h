@@ -2,8 +2,8 @@
 #include "Vector3.h"
 #include <vector>
 
-namespace PhysicalProject {
-	using namespace PhysicalProject::Maths;
+namespace NCL {
+	using namespace NCL::Maths;
 	namespace GameDemo {
 		class NavigationPath		{
 		public:

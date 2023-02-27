@@ -1,6 +1,6 @@
 #include "Transform.h"
 
-using namespace PhysicalProject::GameDemo;
+using namespace NCL::GameDemo;
 
 Transform::Transform()	{
 	scale = Vector3(1, 1, 1);

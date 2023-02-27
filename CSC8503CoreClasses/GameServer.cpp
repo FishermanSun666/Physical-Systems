@@ -1,7 +1,7 @@
 #include "GameServer.h"
 #include "GameWorld.h"
 #include "./enet/enet.h"
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 GameServer::GameServer(int onPort, int maxClients)	{

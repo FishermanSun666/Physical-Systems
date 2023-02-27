@@ -11,8 +11,8 @@ https://research.ncl.ac.uk/game/
 #include "Mouse.h"
 #include "Win32Window.h"
 
-namespace PhysicalProject::Win32Code {
-	class Win32Mouse : public PhysicalProject::Mouse {
+namespace NCL::Win32Code {
+	class Win32Mouse : public NCL::Mouse {
 	public:
 		friend class Win32Window;
 

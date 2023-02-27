@@ -1,6 +1,6 @@
 #include "NetworkObject.h"
 #include "./enet/enet.h"
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 NetworkObject::NetworkObject(GameObject& o, int id) : object(o)	{

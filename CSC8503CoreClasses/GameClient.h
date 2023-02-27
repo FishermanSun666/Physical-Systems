@@ -4,7 +4,7 @@
 #include <thread>
 #include <atomic>
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class GameObject;
 		class GameClient : public NetworkBase {

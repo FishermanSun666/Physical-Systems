@@ -3,7 +3,7 @@
 #include "PushdownState.h"
 #include "Window.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class PauseScreen : public PushdownState {
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override {

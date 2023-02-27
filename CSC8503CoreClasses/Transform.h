@@ -2,9 +2,9 @@
 
 using std::vector;
 
-using namespace PhysicalProject::Maths;
+using namespace NCL::Maths;
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class Transform
 		{

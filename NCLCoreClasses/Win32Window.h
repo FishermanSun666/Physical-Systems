@@ -31,7 +31,7 @@ https://research.ncl.ac.uk/game/
 #include "Win32Mouse.h"
 #include "Win32Keyboard.h"
 
-namespace PhysicalProject::Win32Code {
+namespace NCL::Win32Code {
 	class Win32Mouse;
 	class Win32Keyboard;
 

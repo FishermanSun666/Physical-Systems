@@ -3,7 +3,7 @@
 #include "RenderObject.h"
 #include "Camera.h"
 #include "TextureLoader.h"
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace Rendering;
 using namespace GameDemo;
 

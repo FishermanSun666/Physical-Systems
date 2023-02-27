@@ -2,7 +2,7 @@
 #include "State.h"
 #include "StateTransition.h"
 
-using namespace PhysicalProject::GameDemo;
+using namespace NCL::GameDemo;
 
 StateMachine::StateMachine()	{
 	activeState = nullptr;

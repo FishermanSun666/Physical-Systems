@@ -2,7 +2,7 @@
 #include "TutorialGame.h"
 #include "NetworkBase.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class GameServer;
 		class GameClient;

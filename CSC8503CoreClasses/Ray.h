@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace Maths {
 		struct RayCollision {
 			void*		node;			//Node that was hit

@@ -8,7 +8,7 @@ https://research.ncl.ac.uk/game/
 */
 #pragma once
 
-namespace PhysicalProject {
+namespace NCL {
 	//http://msdn.microsoft.com/en-us/library/ms645540(VS.85).aspx
 	enum class KeyboardKeys {
 		LBUTTON = 0x01,  // Left mouse button  

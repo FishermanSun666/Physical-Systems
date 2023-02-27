@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-using namespace PhysicalProject;
+using namespace NCL;
 
 bool Assets::ReadTextFile(const std::string &filepath, std::string& result) {
 	std::ifstream file(filepath, std::ios::in);

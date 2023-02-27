@@ -10,7 +10,7 @@ https://research.ncl.ac.uk/game/
 #include "ShaderBase.h"
 #include "glad\gl.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace Rendering {
 		class OGLShader : public ShaderBase
 		{

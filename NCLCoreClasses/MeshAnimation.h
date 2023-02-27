@@ -10,7 +10,7 @@ https://research.ncl.ac.uk/game/
 #include <vector>
 #include <string>
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace Maths {
 		class Matrix4;
 	}

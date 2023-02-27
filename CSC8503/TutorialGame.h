@@ -11,7 +11,7 @@
 #include "NavigationGrid.h"
 #include "../NCLCoreClasses/Maths.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		const int GOAL_SCORE = 10;
 		const float GOAL_TIP_TIME = 3.0f;

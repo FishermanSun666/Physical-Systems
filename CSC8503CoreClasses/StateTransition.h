@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class State;
 		typedef std::function<bool()> StateTransitionFunction;

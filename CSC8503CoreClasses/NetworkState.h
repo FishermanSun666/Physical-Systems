@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PhysicalProject {
+namespace NCL {
 	using namespace Maths;
 	namespace GameDemo {
 		//class GameObject;

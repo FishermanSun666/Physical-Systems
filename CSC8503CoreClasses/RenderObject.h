@@ -2,8 +2,8 @@
 #include "TextureBase.h"
 #include "ShaderBase.h"
 
-namespace PhysicalProject {
-	using namespace PhysicalProject::Rendering;
+namespace NCL {
+	using namespace NCL::Rendering;
 
 	class MeshGeometry;
 	namespace GameDemo {

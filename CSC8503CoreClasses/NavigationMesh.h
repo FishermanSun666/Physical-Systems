@@ -3,7 +3,7 @@
 #include "Plane.h"
 #include <string>
 #include <vector>
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class NavigationMesh : public NavigationMap	{
 		public:

@@ -1,6 +1,6 @@
 #include "NetworkState.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 NetworkState::NetworkState()	{

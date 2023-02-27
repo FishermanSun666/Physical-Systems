@@ -1,7 +1,7 @@
 #include "NetworkPlayer.h"
 #include "NetworkedGame.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 NetworkPlayer::NetworkPlayer(NetworkedGame* game, int num)	{

@@ -4,9 +4,9 @@
 #include "Matrix4.h"
 #include "SimpleFont.h"
 
-namespace PhysicalProject {
-	using namespace PhysicalProject::Maths;
-	using namespace PhysicalProject::Rendering;
+namespace NCL {
+	using namespace NCL::Maths;
+	using namespace NCL::Rendering;
 	class Debug
 	{
 	public:

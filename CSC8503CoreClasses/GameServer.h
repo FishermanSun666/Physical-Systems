@@ -1,7 +1,7 @@
 #pragma once
 #include "NetworkBase.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class GameWorld;
 		class GameServer : public NetworkBase {

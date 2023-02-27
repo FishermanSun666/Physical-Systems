@@ -3,8 +3,8 @@
 #include "CollisionDetection.h"
 #include "Debug.h"
 
-namespace PhysicalProject {
-	using namespace PhysicalProject::Maths;
+namespace NCL {
+	using namespace NCL::Maths;
 	namespace GameDemo {
 		template<class T>
 		class QuadTree;
@@ -105,8 +105,8 @@ namespace PhysicalProject {
 }
 
 
-namespace PhysicalProject {
-	using namespace PhysicalProject::Maths;
+namespace NCL {
+	using namespace NCL::Maths;
 	namespace GameDemo {
 		template<class T>
 		class QuadTree

@@ -2,7 +2,7 @@
 #include "PushdownState.h"
 #include "GameEnemyAction.h"
 
-using namespace PhysicalProject::GameDemo;
+using namespace NCL::GameDemo;
 
 class GameEnemyTrackingPlayer : public PushdownState {
 public:

@@ -16,7 +16,7 @@ https://research.ncl.ac.uk/game/
 
 #include <string>
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace Rendering {
 		class RendererBase;
 	};

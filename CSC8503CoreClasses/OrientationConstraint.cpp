@@ -1,7 +1,7 @@
 #include "OrientationConstraint.h"
 #include "GameObject.h"
 #include "PhysicsObject.h"
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace Maths;
 using namespace GameDemo;
 

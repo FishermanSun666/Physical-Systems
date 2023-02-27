@@ -9,7 +9,7 @@
 #include "Debug.h"
 #include "Window.h"
 #include <functional>
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{

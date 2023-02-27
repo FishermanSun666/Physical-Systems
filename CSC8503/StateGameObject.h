@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-namespace PhysicalProject {
+namespace NCL {
     namespace GameDemo {
         class StateMachine;
         class StateGameObject : public GameObject  {

@@ -1,7 +1,7 @@
 #include "PhysicsObject.h"
 #include "PhysicsSystem.h"
 #include "Transform.h"
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* parentVolume)	{
@@ -10,7 +10,7 @@ PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* 
 
 	inverseMass = 1.0f;
 	elasticity	= 1.0f;
-	friction	= 0.8f;
+	friction	= 1.0f;
 }
 
 PhysicsObject::~PhysicsObject()	{

@@ -14,8 +14,8 @@ https://research.ncl.ac.uk/game/
 #include <algorithm>
 #include <cmath>
 
-using namespace PhysicalProject;
-using namespace PhysicalProject::Maths;
+using namespace NCL;
+using namespace NCL::Maths;
 
 Quaternion::Quaternion(void)
 {

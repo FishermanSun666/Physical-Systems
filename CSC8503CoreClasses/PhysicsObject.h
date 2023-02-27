@@ -1,8 +1,8 @@
 #pragma once
 
-using namespace PhysicalProject::Maths;
+using namespace NCL::Maths;
 
-namespace PhysicalProject {
+namespace NCL {
 	class CollisionVolume;
 	
 	namespace GameDemo {

@@ -2,7 +2,7 @@
 #include "Window.h"
 #include <algorithm>
 
-using namespace PhysicalProject;
+using namespace NCL;
 
 /*
 Polls the camera for keyboard / mouse movement.

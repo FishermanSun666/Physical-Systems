@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "GameClient.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class NetworkedGame;
 

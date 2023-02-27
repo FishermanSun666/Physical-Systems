@@ -10,7 +10,7 @@ https://research.ncl.ac.uk/game/
 #include "Vector3.h"
 #include "Vector2.h"
 #include <algorithm>
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace Maths;
 
 Vector4::Vector4(const Vector3& v3, float newW) : x(v3.x), y(v3.y), z(v3.z), w (newW)  {

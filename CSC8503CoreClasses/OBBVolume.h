@@ -1,7 +1,7 @@
 #pragma once
 #include "CollisionVolume.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	class OBBVolume : CollisionVolume
 	{
 	public:

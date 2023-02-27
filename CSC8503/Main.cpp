@@ -25,7 +25,7 @@
 #include "BehaviourAction.h"
 #include "ParallelBehaviour.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 #include <chrono>
@@ -112,8 +112,6 @@ int main() {
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 			w->SetWindowPosition(0, 0);
 		}
-
-		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
 		g->UpdateGame(dt);
 	}

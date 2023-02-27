@@ -1,7 +1,7 @@
 #pragma once
 #include "GameWorld.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		const Vector3 GRAVITY = Vector3(0.0f, -9.8f, 0.0f);
 

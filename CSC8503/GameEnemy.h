@@ -11,14 +11,14 @@
 #include "GameEnemyPatrolling.h"
 #include "../NCLCoreClasses/Maths.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 const float ENEMY_SIGHT_LINE = 50.0f;
 const float ENEMY_SIGHT_RANGE_DEGREE = 60.0f; //Fan view
-const float ENEMY_SPEED = 150.0f;
-const float	ENEMY_TRACKING_SPEED = 200.0f;
-const float ENEMY_ARRIVE_OFFSET = 2.0f;
+const float ENEMY_SPEED = 50.0f;
+const float	ENEMY_TRACKING_SPEED = 75.0f;
+const float ENEMY_ARRIVE_OFFSET = 1.5f;
 const Vector4 ENEMY_DEFAULT_COLOUR = Vector4(3.0f, 3.0f, 3.0f, 1.0f);
 const Vector4 ENEMY_TRACKING_COLOUR = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -63,6 +63,10 @@ public:
 	bool PathFinding(const Vector3& target) {
 		if (nullptr == map) { return false; }
 		Vector3 position = transform.GetPosition();
+		if (ENEMY_ARRIVE_OFFSET * 3.0f >= Maths::Distance(position, target)) {
+			moveTarget = target;
+			return true;
+		}
 		//find path
 		NavigationPath outPath;
 		bool found = map->FindPath(position, target, outPath);
@@ -70,18 +74,11 @@ public:
 		//get next target
 		Vector3 toPos;
 		outPath.PopWaypoint(moveTarget); //pos first position
-		Vector3 pre = position;
-		bool find = false;
 		while (outPath.PopWaypoint(toPos)) {
 			toPos.y = position.y;
-			if (!find) {
-				moveTarget = toPos;
-				find = true;
-			}
-			PhysicalProject::Debug::DrawLine(pre, toPos, Vector4(0, 1, 0, 1));
-			pre = toPos;
+			moveTarget = toPos;
+			break;
 		}
-
 		return true;
 	};
 
@@ -96,7 +93,6 @@ public:
 		transform.SetOrientation(q);
 		//move
 		path.Normalise();
-		path.y = 0;
 		physicsObject->AddForce(-path * speed);
 	}
 
@@ -177,7 +173,7 @@ public:
 
 	bool CheckPositionInView(Vector3 pos) {
 		Vector3 vecEtoP = pos - transform.GetPosition();
-		float distance = PhysicalProject::Maths::Distance(pos, transform.GetPosition());
+		float distance = NCL::Maths::Distance(pos, transform.GetPosition());
 		if (distance > ENEMY_SIGHT_LINE) { return false; } //over sight
 		Vector3 dirE = transform.GetOrientation() * Vector3(0, 0, -1); // positive direction
 		float cosVal = Vector3::Dot(vecEtoP.Normalised(), dirE.Normalised());

@@ -1,6 +1,6 @@
 #include "GameClient.h"
 #include "./enet/enet.h"
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 GameClient::GameClient()	{

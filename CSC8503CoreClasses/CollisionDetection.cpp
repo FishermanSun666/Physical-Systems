@@ -7,7 +7,7 @@
 #include "Maths.h"
 #include "Debug.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 
 bool CollisionDetection::RayPlaneIntersection(const Ray&r, const Plane&p, RayCollision& collisions) {
 	float ln = Vector3::Dot(p.GetNormal(), r.GetDirection());

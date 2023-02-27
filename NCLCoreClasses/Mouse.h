@@ -9,8 +9,8 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include "Vector2.h"
 
-namespace PhysicalProject {
-	using namespace PhysicalProject::Maths;
+namespace NCL {
+	using namespace NCL::Maths;
 	enum class MouseButtons {
 		LEFT		= 0,
 		RIGHT		= 1,

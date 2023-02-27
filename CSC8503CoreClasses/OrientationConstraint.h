@@ -1,7 +1,7 @@
 #pragma once
 #include "Constraint.h"
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		class GameObject;
 

@@ -1,5 +1,5 @@
 #include "Debug.h"
-using namespace PhysicalProject;
+using namespace NCL;
 
 std::vector<Debug::DebugStringEntry>	Debug::stringEntries;
 std::vector<Debug::DebugLineEntry>		Debug::lineEntries;

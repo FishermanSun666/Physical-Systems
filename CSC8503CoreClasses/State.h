@@ -1,6 +1,6 @@
 #pragma once
 
-namespace PhysicalProject {
+namespace NCL {
 	namespace GameDemo {
 		typedef std::function<void(float)> StateUpdateFunction;
 

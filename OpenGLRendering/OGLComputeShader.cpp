@@ -11,7 +11,7 @@ https://research.ncl.ac.uk/game/
 #include "Assets.h"
 #include <iostream>
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace Rendering;
 using std::string;
 

@@ -15,7 +15,7 @@ https://research.ncl.ac.uk/game/
 
 #include "Assets.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace Rendering;
 
 std::map<std::string, TextureLoadFunction> TextureLoader::fileHandlers;

@@ -4,7 +4,7 @@
 #include "BehaviourSequence.h"
 #include "GameEnemyTrackingPlayer.h"
 
-using namespace PhysicalProject::GameDemo;
+using namespace NCL::GameDemo;
 
 class GameEnemyPatrolling : public PushdownState{
 public:

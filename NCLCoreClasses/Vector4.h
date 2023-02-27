@@ -9,7 +9,7 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include <iostream>
 
-namespace PhysicalProject::Maths {
+namespace NCL::Maths {
 	class Vector3;
 	class Vector2;
 

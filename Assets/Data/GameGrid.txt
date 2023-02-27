@@ -6,7 +6,7 @@ x..................x
 x..xxxxxx..xxxxxx..x
 x0........e.......0x
 x..xxxxxx..xxxxxx..x
-x1........0.......1x
+x1................1x
 x..xxxxxx..xxxxxx..x
 x1........e.......1x
 x..xxxxxx..xxxxxx..x

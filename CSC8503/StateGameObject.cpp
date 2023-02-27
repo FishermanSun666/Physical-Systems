@@ -4,7 +4,7 @@
 #include "State.h"
 #include "PhysicsObject.h"
 
-using namespace PhysicalProject;
+using namespace NCL;
 using namespace GameDemo;
 
 StateGameObject::StateGameObject() {
