@@ -1,11 +1,11 @@
 #pragma once
 
-using namespace NCL::Maths;
+using namespace PhysicalProject::Maths;
 
-namespace NCL {
+namespace PhysicalProject {
 	class CollisionVolume;
 	
-	namespace CSC8503 {
+	namespace GameDemo {
 		class Transform;
 
 		class PhysicsObject	{

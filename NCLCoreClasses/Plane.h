@@ -8,7 +8,7 @@ https://research.ncl.ac.uk/game/
 */
 #pragma once
 #include "vector3.h"
-namespace NCL::Maths {
+namespace PhysicalProject::Maths {
 	class Plane {
 	public:
 		Plane(void);

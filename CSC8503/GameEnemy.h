@@ -11,15 +11,15 @@
 #include "GameEnemyPatrolling.h"
 #include "../NCLCoreClasses/Maths.h"
 
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
-const float ENEMY_SIGHT_LINE = 30.0f;
-const float ENEMY_SIGHT_RANGE_DEGREE = 60.0f;
-const float ENEMY_SPEED = 100.0f;
-const float	ENEMY_TRACKING_SPEED = 250.0f;
+const float ENEMY_SIGHT_LINE = 50.0f;
+const float ENEMY_SIGHT_RANGE_DEGREE = 60.0f; //Fan view
+const float ENEMY_SPEED = 150.0f;
+const float	ENEMY_TRACKING_SPEED = 200.0f;
 const float ENEMY_ARRIVE_OFFSET = 2.0f;
-const Vector4 ENEMY_DEFAULT_COLOUR = Vector4(0.0f, 0.5f, 1.0f, 1.0f);
+const Vector4 ENEMY_DEFAULT_COLOUR = Vector4(3.0f, 3.0f, 3.0f, 1.0f);
 const Vector4 ENEMY_TRACKING_COLOUR = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
 class Debug;
@@ -30,6 +30,7 @@ private:
 
 	float speed = ENEMY_SPEED;
 	//pathFinding
+	Vector3 lastTarget;
 	Vector3 moveTarget;
 	Vector3 playerPosition;
 	NavigationGrid* map;
@@ -56,17 +57,12 @@ public:
 		SetColour(ENEMY_DEFAULT_COLOUR);
 	}
 	bool TrackingPlayer() {
-		return (playerPosition != Vector3(0, 0, 0));
+		return (playerPosition != Vector3());
 	}
 
 	bool PathFinding(const Vector3& target) {
 		if (nullptr == map) { return false; }
 		Vector3 position = transform.GetPosition();
-		//catch target
-		if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(position, target)) {
-			moveTarget = target;
-			return true;
-		}
 		//find path
 		NavigationPath outPath;
 		bool found = map->FindPath(position, target, outPath);
@@ -104,11 +100,12 @@ public:
 	bool MoveToTarget(float dt, Vector3 target) {
 		//arrive
 		Vector3 pos = GetTransform().GetPosition();
-		target.y = pos.y;
-		if (ENEMY_ARRIVE_OFFSET >= (pos - target).Length()) {
+		Vector3 tmp = Vector3(target.x, pos.y, target.z);
+		if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(pos, tmp)) {
+			lastTarget = target;
 			return false;
 		}
-		PathFinding(target);
+		PathFinding(tmp);
 		Move(dt);
 		return true;
 	}
@@ -135,16 +132,11 @@ public:
 			GameEnemyAction* patrolling = new GameEnemyAction(i, this, "Patrolling...",
 				[&](float dt, Vector3 target, GameEnemy* object, BehaviourState state)->BehaviourState {
 					//track player
-					if (object->TrackingPlayer()) {
-						return Failure;
-					}
-					if (state == Initialise) {
-						return Ongoing;
-					}
+					if (object->TrackingPlayer()) { return Failure; }
+					if (state == Initialise) { return Ongoing; }
 					if (state == Ongoing) {
-						if (!object->MoveToTarget(dt, target)) {
-							return Success;
-						}
+						if (lastTarget == target) { return Success; }
+						if (!object->MoveToTarget(dt, target)) { return Success; }
 						return state;
 					}
 					return state;
@@ -155,18 +147,13 @@ public:
 	}
 	//make tracking action
 	GameEnemyAction* NewTrackingPlayerAction() {
-		GameEnemyAction* patrolling = new GameEnemyAction(playerPosition, this, "Tracking Player...", 
+		GameEnemyAction* tracking = new GameEnemyAction(playerPosition, this, "Tracking Player...", 
 			[&](float dt, Vector3 target, GameEnemy* object, BehaviourState state)->BehaviourState {
 				//tacking player
-				if (state == Initialise) {
-					std::cout << "start tracking player..." << std::endl;
-					return Ongoing;
-				}
+				if (state == Initialise) { return Ongoing; }
 				if (state == Ongoing) {
 					//lost target
-					if (!object->TrackingPlayer()) {
-						return Failure;
-					}
+					if (!object->TrackingPlayer()) { return Failure; }
 					if (!object->MoveToTarget(dt, object->GetPlayerPosition())) {
 						object->LostPlayer();
 						return Success;
@@ -175,7 +162,7 @@ public:
 				}
 				return state;
 			});
-		return patrolling;
+		return tracking;
 	}
 
 	void UpdateAction(float dt) {
@@ -187,7 +174,7 @@ public:
 
 	bool CheckPositionInView(Vector3 pos) {
 		Vector3 vecEtoP = pos - transform.GetPosition();
-		float distance = NCL::Maths::Distance(pos, transform.GetPosition());
+		float distance = PhysicalProject::Maths::Distance(pos, transform.GetPosition());
 		if (distance > ENEMY_SIGHT_LINE) { return false; } //over sight
 		Vector3 dirE = transform.GetOrientation() * Vector3(0, 0, -1); // positive direction
 		float cosVal = Vector3::Dot(vecEtoP.Normalised(), dirE.Normalised());

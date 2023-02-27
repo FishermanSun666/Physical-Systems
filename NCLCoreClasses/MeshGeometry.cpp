@@ -9,7 +9,7 @@
 #include <fstream>
 #include <string>
 
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Maths;
 
 MeshGeometry::MeshGeometry()

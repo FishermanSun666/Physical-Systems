@@ -25,7 +25,7 @@ https://research.ncl.ac.uk/game/
 #include <string>
 #include <vector>
 
-namespace NCL {
+namespace PhysicalProject {
 	class MeshGeometry;
 
 	namespace Maths {

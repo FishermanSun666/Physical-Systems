@@ -1,6 +1,6 @@
 #include "RendererBase.h"
 
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Rendering;
 
 RendererBase::RendererBase(Window& window) : hostWindow(window)	{

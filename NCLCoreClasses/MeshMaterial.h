@@ -15,7 +15,7 @@ using std::string;
 using std::vector;
 using std::map;
 
-namespace NCL {
+namespace PhysicalProject {
 	namespace Rendering {
 		class TextureBase;
 	}

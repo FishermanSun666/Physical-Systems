@@ -25,8 +25,8 @@
 #include "BehaviourAction.h"
 #include "ParallelBehaviour.h"
 
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 #include <chrono>
 #include <thread>

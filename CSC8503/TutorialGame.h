@@ -11,9 +11,9 @@
 #include "NavigationGrid.h"
 #include "../NCLCoreClasses/Maths.h"
 
-namespace NCL {
-	namespace CSC8503 {
-		const int GOAL_SCORE = 20;
+namespace PhysicalProject {
+	namespace GameDemo {
+		const int GOAL_SCORE = 10;
 		const float GOAL_TIP_TIME = 3.0f;
 
 		class TutorialGame		{
@@ -74,14 +74,14 @@ namespace NCL {
 			GameObject* AddGoalToWorld(const Vector3& position);
 			GameObject* AddGoalDeocrationToWorld(const Vector3& position);
 
-			void PlayerObjectMovement();
+			void PlayerObjectMovement(float dt);
 			void InitMap();
 			void CheckBallState();
 			void UpdatePlayerState(float dt);
 			bool CheckPositionInEnemyView(Vector3 pos, GameEnemy* enemy);
 			void UpdateEnemyState(float dt);
 			bool CheckPlayerInEnemyView(GameEnemy* enemy);
-			bool KickBall(float dt);
+			bool KickBall();
 			bool Goal();
 			void CheckPlayerDead();
 

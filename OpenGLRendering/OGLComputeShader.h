@@ -11,7 +11,7 @@ https://research.ncl.ac.uk/game/
 
 #include <string>
 
-namespace NCL {
+namespace PhysicalProject {
 	class OGLComputeShader	{
 	public:
 		OGLComputeShader(const std::string& s);

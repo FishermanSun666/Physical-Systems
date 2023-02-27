@@ -11,7 +11,7 @@ https://research.ncl.ac.uk/game/
 #include <iostream>
 #include <algorithm>
 
-namespace NCL::Maths {
+namespace PhysicalProject::Maths {
 	class Vector2;
 	class Vector4;
 

@@ -1,7 +1,7 @@
 #include "NetworkObject.h"
 #include "./enet/enet.h"
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 NetworkObject::NetworkObject(GameObject& o, int id) : object(o)	{
 	deltaErrors = 0;

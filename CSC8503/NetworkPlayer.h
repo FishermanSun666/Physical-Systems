@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #include "GameClient.h"
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class NetworkedGame;
 
 		class NetworkPlayer : public GameObject {

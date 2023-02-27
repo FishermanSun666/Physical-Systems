@@ -12,8 +12,8 @@
 #include <corecrt_math_defines.h>
 #include <cmath>
 
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 TutorialGame::TutorialGame()	{
 	world		= new GameWorld();
@@ -383,7 +383,7 @@ bool TutorialGame::SelectObject() {
 	if (inSelectionMode) {
 		Debug::Print("Press Q to change to camera mode!", Vector2(5, 85));
 
-		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
+		if (Window::GetMouse()->ButtonDown(PhysicalProject::MouseButtons::LEFT)) {
 			if (selectionObject) {	//set colour to deselected;
 				selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
 				selectionObject = nullptr;
@@ -402,7 +402,7 @@ bool TutorialGame::SelectObject() {
 				return false;
 			}
 		}
-		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
+		if (Window::GetKeyboard()->KeyPressed(PhysicalProject::KeyboardKeys::L)) {
 			if (selectionObject) {
 				if (lockedObject == selectionObject) {
 					lockedObject = nullptr;
@@ -452,7 +452,7 @@ void TutorialGame::MoveSelectedObject() {
 		return;//we haven't selected anything!
 	}
 	//Push the selected object!
-	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
+	if (Window::GetMouse()->ButtonPressed(PhysicalProject::MouseButtons::RIGHT)) {
 		Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
 
 		RayCollision closestCollision;
@@ -462,31 +462,6 @@ void TutorialGame::MoveSelectedObject() {
 			}
 		}
 	}
-}
-
-void TutorialGame::BridgeConstraintTest() {
-	Vector3 cubeSize = Vector3(8, 8, 8);
-
-	float invCubeMass = 5;	//how heavy the middle pieces are
-	int numLinks = 10;
-	float maxDistance = 30;	//constraint distance
-	float cubeDistance = 20;	//distance between links
-
-	Vector3 startPos = Vector3(0, 100, 0);
-
-	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
-	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);
-
-	GameObject* previous = start;
-
-	for (int i = 0; i < numLinks; ++i) {
-		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
-		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
-		world->AddConstraint(constraint);
-		previous = block;
-	}
-	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
-	world->AddConstraint(constraint);
 }
 
 void TutorialGame::InitMap() {
@@ -580,7 +555,7 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float inverseMass = 0.1f;
 
 	GameEnemy* character = new GameEnemy("Enemy");
-	Vector3 size = Vector3(0.3f, 0.9f, 1.0f) * scale;
+	Vector3 size = Vector3(0.3f, 0.9f, 0.9f) * scale;
 	AABBVolume* volume = new AABBVolume(size);
 	character->SetBoundingVolume((CollisionVolume*)volume, size);
 
@@ -712,12 +687,10 @@ void TutorialGame::CameraLockOnPlayer() {
 void TutorialGame::UpdateGameObject(float dt) {
 	if (gameover) { return; }
 	if (!playerObject->InReviveTime()) {
-		PlayerObjectMovement();
+		PlayerObjectMovement(dt);
 	}
 	//update player info;
 	UpdatePlayerState(dt);
-	//kick ball
-	KickBall(dt);
 	//catch ball
 	CheckBallState();
 	//update enemy
@@ -726,7 +699,7 @@ void TutorialGame::UpdateGameObject(float dt) {
 	CheckPlayerDead();
 }
 
-void TutorialGame::PlayerObjectMovement() {
+void TutorialGame::PlayerObjectMovement(float dt) {
 	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
 	Matrix4 camWorld = view.Inverse();
 
@@ -746,11 +719,16 @@ void TutorialGame::PlayerObjectMovement() {
 	//linear
 	float speed = 0.0f;
 	auto speedUp = [&]() {
-		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::SHIFT)) {
-			speed = playerObject->GetQuickSpeed();
-		}
-		else {
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::SHIFT)) { //speed up
+			if (playerObject->SpeedUp(dt)) {
+				speed = playerObject->GetQuickSpeed();
+			}
+			else {
+				speed = playerObject->GetSpeed();
+			}
+		} else {
 			speed = playerObject->GetSpeed();
+			playerObject->RecoverStrength(dt);
 		}
 	};
 	Vector3 position = transform.GetPosition();
@@ -770,10 +748,6 @@ void TutorialGame::PlayerObjectMovement() {
 		speedUp();
 		playerObject->GetPhysicsObject()->AddForce(rightAxis * speed);
 	}
-	////clear player velocity
-	//if (0.0f == speed) {
-	//	playerObject->GetPhysicsObject()->SetLinearVelocity(Vector3(0, playerObject->GetPhysicsObject()->GetLinearVelocity().y, 0));
-	//}
 }
 
 void TutorialGame::UpdatePlayerState(float dt) {
@@ -789,7 +763,7 @@ bool TutorialGame::CheckPositionInEnemyView(Vector3 pos, GameEnemy* enemy) {
 	//check for objects blocking the vie
 	Vector3 enemyPos = enemy->GetTransform().GetPosition();
 	Vector3 vecEtoP = pos - enemyPos;
-	float dist = NCL::Maths::Distance(enemyPos, pos);
+	float dist = PhysicalProject::Maths::Distance(enemyPos, pos);
 	vector<GameObject*> objects;
 	world->GetObjectsInTargetView(objects, enemyPos, vecEtoP, dist);
 	auto ray = Ray(enemyPos, vecEtoP.Normalised());
@@ -821,11 +795,11 @@ void TutorialGame::UpdateEnemyState(float dt) {
 }
 
 
-bool TutorialGame::KickBall(float dt) {
+bool TutorialGame::KickBall() {
 	if (!playerObject->CheckCatchBall()) {
 		return false;
 	}
-	if (Window::GetMouse()->ButtonHeld(NCL::MouseButtons::LEFT)) {
+	if (Window::GetMouse()->ButtonHeld(PhysicalProject::MouseButtons::LEFT)) {
 		//keep ball;
 		Vector3 playerDir = -playerObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);
 		playerDir.Normalise();
@@ -835,20 +809,19 @@ bool TutorialGame::KickBall(float dt) {
 		tarPos.y += 1.0f;
 		ballObject->GetTransform().SetPosition(tarPos);
 		//change force;
-		if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::E)) { ballObject->IncreaseForce(dt * 500.0f); }
-		else if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::Q)) { ballObject->DecreaseForce(dt * 500.0f); }
+		if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::E)) { ballObject->IncreaseForce(100.0f); }
+		else if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::Q)) { ballObject->DecreaseForce(100.0f); }
 		//std::cout << "kick force: " << ballObject->GetForce() << std::endl;
 		//change angle
 		float changeAngle = -Window::GetMouse()->GetRelativePosition().y;
 		ballObject->AddKickAngle(changeAngle * 0.01);
-		if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
+		if (Window::GetMouse()->ButtonPressed(PhysicalProject::MouseButtons::RIGHT)) {
 			ballObject->GetPhysicsObject()->SetLinearVelocity(playerObject->GetPhysicsObject()->GetLinearVelocity());
 			//cut constraint
 			if (playerObject->CheckCatchBall()) {
 				auto cons = playerObject->LostBall();
 				world->RemoveConstraint(cons, true);
 			}
-			//kick ball
 			ballObject->Kick(playerDir);
 		}
 	}
@@ -861,19 +834,22 @@ bool TutorialGame::Goal() {
 	if (!CollisionDetection::ObjectIntersection(goalObject, ballObject, info)) {
 		return false;
 	}
-	//put back ball
-	ballObject->Reset();
 	//cut constraint
 	if (playerObject->CheckCatchBall()) {
 		auto cons = playerObject->LostBall();
 		world->RemoveConstraint(cons, true);
 	}
 	goalTime = GOAL_TIP_TIME;
-	playerObject->AddScore(GOAL_SCORE);
+	float extraScore = GOAL_SCORE * (int)Maths::Distance(ballObject->GetTransform().GetPosition(), goalObject->GetTransform().GetPosition());
+	playerObject->AddScore(GOAL_SCORE + extraScore);
+	//put back ball
+	ballObject->Reset();
 	return true;
 }
 
 void TutorialGame::CheckBallState() {
+	//kick ball
+	KickBall();
 	//goal
 	if (Goal()) { return; }
 	//catch ball
@@ -962,7 +938,7 @@ void TutorialGame::UpdateScreenInfo(float dt) {
 		}
 		//print ball info
 		if (nullptr != ballObject) {
-			if (Window::GetMouse()->ButtonHeld(NCL::MouseButtons::LEFT) && playerObject->CheckCatchBall()) {
+			if (Window::GetMouse()->ButtonHeld(PhysicalProject::MouseButtons::LEFT) && playerObject->CheckCatchBall()) {
 				Vector3 line = playerObject->GetTransform().GetOrientation() * Vector3(0.0f, 0.0f, -1.0f);
 				line.y += ballObject->GetAngleAmend();
 				//write orientaion line 

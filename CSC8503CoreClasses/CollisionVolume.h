@@ -1,5 +1,5 @@
 #pragma once
-namespace NCL {
+namespace PhysicalProject {
 	enum class VolumeType {
 		AABB	= 1,
 		OBB		= 2,

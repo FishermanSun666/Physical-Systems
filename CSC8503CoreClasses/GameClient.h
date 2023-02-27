@@ -4,8 +4,8 @@
 #include <thread>
 #include <atomic>
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class GameObject;
 		class GameClient : public NetworkBase {
 		public:

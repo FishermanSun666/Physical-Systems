@@ -9,7 +9,7 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include "Window.h"
 
-namespace NCL::Rendering {
+namespace PhysicalProject::Rendering {
 	enum class VerticalSyncState {
 		VSync_ON,
 		VSync_OFF,
@@ -17,7 +17,7 @@ namespace NCL::Rendering {
 	};
 	class RendererBase {
 	public:
-		friend class NCL::Window;
+		friend class PhysicalProject::Window;
 
 		RendererBase(Window& w);
 		virtual ~RendererBase();

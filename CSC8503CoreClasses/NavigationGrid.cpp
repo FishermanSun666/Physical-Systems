@@ -3,8 +3,8 @@
 
 #include <fstream>
 
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 const int LEFT_NODE		= 0;
 const int RIGHT_NODE	= 1;

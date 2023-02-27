@@ -9,8 +9,8 @@
 #include "Debug.h"
 #include "Window.h"
 #include <functional>
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= true;

@@ -1,8 +1,8 @@
 #pragma once
 #include "Constraint.h"
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class GameObject;
 
 		class PositionConstraint : public Constraint	{

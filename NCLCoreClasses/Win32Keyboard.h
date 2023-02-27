@@ -11,7 +11,7 @@ https://research.ncl.ac.uk/game/
 #include "Keyboard.h"
 #include "Win32Window.h"
 
-namespace NCL::Win32Code {
+namespace PhysicalProject::Win32Code {
 	class Win32Keyboard : public Keyboard {
 	public:
 		friend class Win32Window;

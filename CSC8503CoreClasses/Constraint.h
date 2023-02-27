@@ -1,7 +1,7 @@
 #pragma once
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class Constraint	{
 		public:
 			Constraint() {}

@@ -3,7 +3,7 @@
 #include "NetworkBase.h"
 #include "NetworkState.h"
 
-namespace NCL::CSC8503 {
+namespace PhysicalProject::GameDemo {
 	class GameObject;
 
 	struct FullPacket : public GamePacket {

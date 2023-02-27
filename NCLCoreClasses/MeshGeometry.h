@@ -14,7 +14,7 @@ https://research.ncl.ac.uk/game/
 
 using std::vector;
 
-namespace NCL {
+namespace PhysicalProject {
 	namespace Maths {
 		class Vector2;
 		class Vector3;

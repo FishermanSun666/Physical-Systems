@@ -13,7 +13,7 @@ https://research.ncl.ac.uk/game/
 #include "Vector2.h"
 #include "Vector4.h"
 
-namespace NCL {
+namespace PhysicalProject {
 	namespace Maths {
 		class Vector2;
 		class Vector3;
@@ -29,9 +29,9 @@ namespace NCL {
 			~SimpleFont();
 
 			struct InterleavedTextVertex {
-				NCL::Maths::Vector2 pos;
-				NCL::Maths::Vector2 texCoord;
-				NCL::Maths::Vector4 colour;
+				PhysicalProject::Maths::Vector2 pos;
+				PhysicalProject::Maths::Vector2 texCoord;
+				PhysicalProject::Maths::Vector4 colour;
 			};
 
 			int GetVertexCountForString(const std::string& text);

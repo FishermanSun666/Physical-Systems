@@ -30,8 +30,8 @@ https://research.ncl.ac.uk/game/
 PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = NULL;
 #endif
 
-using namespace NCL;
-using namespace NCL::Rendering;
+using namespace PhysicalProject;
+using namespace PhysicalProject::Rendering;
 
 #ifdef OPENGL_DEBUGGING
 static void APIENTRY DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);

@@ -1,7 +1,7 @@
 #pragma once
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class State;
 		typedef std::function<bool()> StateTransitionFunction;
 		class StateTransition	{

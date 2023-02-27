@@ -4,10 +4,10 @@
 #include "Ray.h"
 #include "CollisionDetection.h"
 #include "QuadTree.h"
-namespace NCL {
+namespace PhysicalProject {
 		class Camera;
 		using Maths::Ray;
-	namespace CSC8503 {
+	namespace GameDemo {
 		class GameObject;
 		class Constraint;
 

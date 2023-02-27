@@ -3,9 +3,9 @@
 #include "RenderObject.h"
 #include "Camera.h"
 #include "TextureLoader.h"
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Rendering;
-using namespace CSC8503;
+using namespace GameDemo;
 
 #define SHADOWSIZE 4096
 

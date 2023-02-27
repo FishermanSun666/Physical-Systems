@@ -9,7 +9,7 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include <string>
 
-namespace NCL::Assets {
+namespace PhysicalProject::Assets {
 	const std::string ASSETROOT(ASSETROOTLOCATION);
 	const std::string SHADERDIR(ASSETROOT + "Shaders/");
 	const std::string MESHDIR(ASSETROOT + "Meshes/");

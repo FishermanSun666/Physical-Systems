@@ -8,8 +8,8 @@ https://research.ncl.ac.uk/game/
 */
 #include "Plane.h"
 
-using namespace NCL;
-using namespace NCL::Maths;
+using namespace PhysicalProject;
+using namespace PhysicalProject::Maths;
 
 Plane::Plane(void) {
 	normal		= Vector3(0, 1, 0);

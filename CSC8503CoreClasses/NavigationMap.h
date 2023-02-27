@@ -1,9 +1,9 @@
 #pragma once
 #include "Vector3.h"
 #include "NavigationPath.h"
-namespace NCL {
-	using namespace NCL::Maths;
-	namespace CSC8503 {
+namespace PhysicalProject {
+	using namespace PhysicalProject::Maths;
+	namespace GameDemo {
 		class NavigationMap
 		{
 		public:

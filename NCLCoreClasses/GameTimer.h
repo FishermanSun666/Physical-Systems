@@ -10,7 +10,7 @@ https://research.ncl.ac.uk/game/
 
 #include <chrono>
 
-namespace NCL {
+namespace PhysicalProject {
 	typedef  std::chrono::time_point<std::chrono::high_resolution_clock>  Timepoint;
 
 	class GameTimer {

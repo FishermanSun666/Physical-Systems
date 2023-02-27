@@ -1,8 +1,8 @@
 #pragma once
 
-namespace NCL {
+namespace PhysicalProject {
 	using namespace Maths;
-	namespace CSC8503 {
+	namespace GameDemo {
 		//class GameObject;
 		class NetworkState	{
 		public:

@@ -7,8 +7,8 @@
 #include <corecrt_math_defines.h>
 
 
-using namespace NCL;
-using namespace NCL::CSC8503;
+using namespace PhysicalProject;
+using namespace PhysicalProject::GameDemo;
 
 GameWorld::GameWorld()	{
 	mainCamera = new Camera();
@@ -145,7 +145,7 @@ void GameWorld::GetObjectsInTargetView(vector<GameObject*> &objects, Vector3 pos
 		if (object->GetName() == "Player" || object->GetName() == "Enemy") { continue; }
 		Vector3 ObjPos = object->GetTransform().GetPosition();
 		Vector3 vecTtoO = ObjPos - pos;
-		float lenTO = NCL::Maths::Distance(ObjPos, pos);
+		float lenTO = PhysicalProject::Maths::Distance(ObjPos, pos);
 		if (distance < lenTO) { continue; } //too far
 		float cosTOtoV = Vector3::Dot(vec.Normalised(), vecTtoO.Normalised());
 		if (90.0f < acos(cosTOtoV) * 180.0f / M_PI) { continue; } // The angle with the vector should be less than 90 degree

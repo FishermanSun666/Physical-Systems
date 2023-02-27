@@ -10,8 +10,8 @@ https://research.ncl.ac.uk/game/
 #include "Matrix4.h"
 #include "Vector3.h"
 
-namespace NCL {
-	using namespace NCL::Maths;
+namespace PhysicalProject {
+	using namespace PhysicalProject::Maths;
 	enum class CameraType {
 		Orthographic,
 		Perspective

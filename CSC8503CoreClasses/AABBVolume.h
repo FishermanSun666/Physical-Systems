@@ -2,8 +2,8 @@
 #include "CollisionVolume.h"
 #include "Vector3.h"
 
-namespace NCL {
-	using namespace NCL::Maths;
+namespace PhysicalProject {
+	using namespace PhysicalProject::Maths;
 	class AABBVolume : CollisionVolume
 	{
 	public:

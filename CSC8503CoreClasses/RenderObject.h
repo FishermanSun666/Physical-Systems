@@ -2,11 +2,11 @@
 #include "TextureBase.h"
 #include "ShaderBase.h"
 
-namespace NCL {
-	using namespace NCL::Rendering;
+namespace PhysicalProject {
+	using namespace PhysicalProject::Rendering;
 
 	class MeshGeometry;
-	namespace CSC8503 {
+	namespace GameDemo {
 		class Transform;
 		using namespace Maths;
 

@@ -1,22 +1,24 @@
 ﻿#pragma once
 #include "PhysicsSystem.h"
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class GameBall : public GameObject {
 		protected:
-			const float BALL_MAX_ANGLE = 3.0f;
+			const float BALL_MAX_ANGLE = 2.0f;
 			const float BALL_MAX_FORCE = 8000.0f;
 
 			float force = 0.0f;
 			float angleAmend = 0.0f;
 			Vector3 originPos;
+			Vector3 kickedPos;
 		public:
 			GameBall(const std::string name) : GameObject(name) {}
 			~GameBall() {}
 			void SetOriginPosition(Vector3 pos) {
 				originPos = pos;
 			}
+			Vector3 GetKickedPosition() { return kickedPos; }
 			void Reset() {
 				force = 0.0f;
 				angleAmend = 0.0f;
@@ -32,11 +34,10 @@ namespace NCL {
 			void DecreaseForce(float dt) { force = force - dt < 0.0f ? 0.0f : force - dt; }
 			void Kick(Vector3 dir) {
 				//dir.y += angleAmend;
-				dir.y += angleAmend;
+				kickedPos = transform.GetPosition();
+				dir.y = angleAmend;
 				GetPhysicsObject()->ClearForces();
-				//GetPhysicsObject()->SetLinearVelocity(dir * force);
 				GetPhysicsObject()->AddForce(dir * force);
-				//GetPhysicsObject()->AddForceAtPosition(dir * force, GetTransform().GetPosition());
 			}
 
 			float GetAngleAmend() { return angleAmend; }

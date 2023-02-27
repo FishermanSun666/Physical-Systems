@@ -11,7 +11,7 @@
 
 #include "RendererBase.h"
 
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Rendering;
 
 Window*		Window::window		= nullptr;

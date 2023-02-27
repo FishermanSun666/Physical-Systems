@@ -1,7 +1,7 @@
 #include "Keyboard.h"
 #include <string>
 
-using namespace NCL;
+using namespace PhysicalProject;
 
 Keyboard::Keyboard() {
 	//Initialise the arrays to false!

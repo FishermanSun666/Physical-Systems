@@ -9,7 +9,7 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include "Vector2.h"
 #include <assert.h>
-namespace NCL::Maths {
+namespace PhysicalProject::Maths {
 	class Matrix2 {
 	public: 
 		float	array[2][2];

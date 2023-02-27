@@ -10,8 +10,8 @@ https://research.ncl.ac.uk/game/
 #include "Assets.h"
 #include <iostream>
 
-using namespace NCL;
-using namespace NCL::Rendering;
+using namespace PhysicalProject;
+using namespace PhysicalProject::Rendering;
 
 GLuint shaderTypes[(int)ShaderStages::MAXSIZE] = {
 	GL_VERTEX_SHADER,

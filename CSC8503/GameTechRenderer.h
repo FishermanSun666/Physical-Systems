@@ -6,10 +6,10 @@
 
 #include "GameWorld.h"
 
-namespace NCL {
+namespace PhysicalProject {
 	class Maths::Vector3;
 	class Maths::Vector4;
-	namespace CSC8503 {
+	namespace GameDemo {
 		class RenderObject;
 
 		class GameTechRenderer : public OGLRenderer	{

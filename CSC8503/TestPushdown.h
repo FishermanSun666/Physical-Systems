@@ -3,8 +3,8 @@
 #include "PushdownState.h"
 #include "Window.h"
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class PauseScreen : public PushdownState {
 			PushdownResult OnUpdate(float dt, PushdownState** newState) override {
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {

@@ -6,9 +6,9 @@
 
 
 
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Maths;
-using namespace CSC8503;
+using namespace GameDemo;
 
 PositionConstraint::PositionConstraint(GameObject* a, GameObject* b, float d)
 {

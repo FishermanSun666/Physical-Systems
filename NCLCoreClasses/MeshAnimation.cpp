@@ -5,8 +5,8 @@
 #include <fstream>
 #include <string>
 
-using namespace NCL;
-using namespace NCL::Maths;
+using namespace PhysicalProject;
+using namespace PhysicalProject::Maths;
 
 MeshAnimation::MeshAnimation() {
 	jointCount	= 0;

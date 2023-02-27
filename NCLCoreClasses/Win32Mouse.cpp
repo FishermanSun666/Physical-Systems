@@ -2,7 +2,7 @@
 #include <algorithm>
 #ifdef _WIN32
 
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Win32Code;
 
 Win32Mouse::Win32Mouse(HWND &hwnd)	{

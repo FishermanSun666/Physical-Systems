@@ -11,7 +11,7 @@ https://research.ncl.ac.uk/game/
 #include <functional>
 #include <string>
 
-namespace NCL {
+namespace PhysicalProject {
 	namespace Rendering {
 		class TextureBase;
 	}

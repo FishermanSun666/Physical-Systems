@@ -11,10 +11,10 @@
 #include "CapsuleVolume.h"
 #include "Ray.h"
 
-using NCL::Camera;
-using namespace NCL::Maths;
-using namespace NCL::CSC8503;
-namespace NCL {
+using PhysicalProject::Camera;
+using namespace PhysicalProject::Maths;
+using namespace PhysicalProject::GameDemo;
+namespace PhysicalProject {
 	class CollisionDetection
 	{
 	public:

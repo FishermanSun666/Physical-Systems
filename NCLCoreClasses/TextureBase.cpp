@@ -1,5 +1,5 @@
 #include "TextureBase.h"
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Rendering;
 
 TextureBase::TextureBase()

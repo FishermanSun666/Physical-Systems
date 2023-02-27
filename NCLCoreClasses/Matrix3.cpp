@@ -15,8 +15,8 @@ https://research.ncl.ac.uk/game/
 #include "Quaternion.h"
 #include <assert.h>
 
-using namespace NCL;
-using namespace NCL::Maths;
+using namespace PhysicalProject;
+using namespace PhysicalProject::Maths;
 
 Matrix3::Matrix3(void)	{
 	for (int i = 0; i < 3; ++i) {

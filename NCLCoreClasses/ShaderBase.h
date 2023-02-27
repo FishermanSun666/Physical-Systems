@@ -9,7 +9,7 @@ https://research.ncl.ac.uk/game/
 #pragma once
 #include <string>
 using std::string;
-namespace NCL::Rendering {
+namespace PhysicalProject::Rendering {
 	enum class ShaderStages {
 		Vertex,
 		Fragment,

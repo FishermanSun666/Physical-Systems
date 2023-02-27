@@ -1,8 +1,8 @@
 #pragma once
 #include "NetworkBase.h"
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class GameWorld;
 		class GameServer : public NetworkBase {
 		public:

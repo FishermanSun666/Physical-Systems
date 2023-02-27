@@ -2,8 +2,8 @@
 #include "TutorialGame.h"
 #include "NetworkBase.h"
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		class GameServer;
 		class GameClient;
 		class NetworkPlayer;

@@ -4,8 +4,8 @@
 #include "State.h"
 #include "PhysicsObject.h"
 
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 StateGameObject::StateGameObject() {
 	counter = 0.0f;

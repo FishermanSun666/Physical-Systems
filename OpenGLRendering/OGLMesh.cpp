@@ -11,9 +11,9 @@ https://research.ncl.ac.uk/game/
 #include "Vector3.h"
 #include "Vector4.h"
 
-using namespace NCL;
-using namespace NCL::Rendering;
-using namespace NCL::Maths;
+using namespace PhysicalProject;
+using namespace PhysicalProject::Rendering;
+using namespace PhysicalProject::Maths;
 
 OGLMesh::OGLMesh() {
 	vao			= 0;

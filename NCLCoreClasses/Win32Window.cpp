@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <io.h>
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Win32Code;
 
 #define WINDOWCLASS "WindowClass"

@@ -8,7 +8,7 @@ https://research.ncl.ac.uk/game/
 */
 #pragma once
 
-namespace NCL::Rendering {
+namespace PhysicalProject::Rendering {
 	class TextureBase	{
 	public:
 		virtual ~TextureBase();

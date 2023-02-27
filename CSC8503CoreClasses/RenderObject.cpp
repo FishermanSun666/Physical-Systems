@@ -1,8 +1,8 @@
 #include "RenderObject.h"
 #include "MeshGeometry.h"
 
-using namespace NCL::CSC8503;
-using namespace NCL;
+using namespace PhysicalProject::GameDemo;
+using namespace PhysicalProject;
 
 RenderObject::RenderObject(Transform* parentTransform, MeshGeometry* mesh, TextureBase* tex, ShaderBase* shader) {
 	this->transform	= parentTransform;

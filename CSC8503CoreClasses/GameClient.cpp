@@ -1,7 +1,7 @@
 #include "GameClient.h"
 #include "./enet/enet.h"
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 
 GameClient::GameClient()	{
 	netHandle = enet_host_create(nullptr, 1, 1, 0, 0);

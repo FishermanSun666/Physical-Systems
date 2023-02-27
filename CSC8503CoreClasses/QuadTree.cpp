@@ -1,2 +1,2 @@
 #include "QuadTree.h"
-using namespace NCL;
+using namespace PhysicalProject;

@@ -2,8 +2,8 @@
 #include "Assets.h"
 #include "Maths.h"
 #include <fstream>
-using namespace NCL;
-using namespace CSC8503;
+using namespace PhysicalProject;
+using namespace GameDemo;
 using namespace std;
 
 NavigationMesh::NavigationMesh()

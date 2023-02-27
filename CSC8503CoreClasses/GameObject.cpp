@@ -4,7 +4,7 @@
 #include "RenderObject.h"
 #include "NetworkObject.h"
 
-using namespace NCL::CSC8503;
+using namespace PhysicalProject::GameDemo;
 
 GameObject::GameObject(string objectName)	{
 	name			= objectName;

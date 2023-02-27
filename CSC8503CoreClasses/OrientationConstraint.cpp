@@ -1,9 +1,9 @@
 #include "OrientationConstraint.h"
 #include "GameObject.h"
 #include "PhysicsObject.h"
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Maths;
-using namespace CSC8503;
+using namespace GameDemo;
 
 OrientationConstraint::OrientationConstraint(GameObject* a, GameObject* b)
 {

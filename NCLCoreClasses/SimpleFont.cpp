@@ -16,7 +16,7 @@ https://research.ncl.ac.uk/game/
 #include "Vector3.h"
 #include "Vector4.h"
 
-using namespace NCL;
+using namespace PhysicalProject;
 using namespace Rendering;
 using namespace Maths;
 

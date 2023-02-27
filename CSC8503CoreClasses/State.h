@@ -1,7 +1,7 @@
 #pragma once
 
-namespace NCL {
-	namespace CSC8503 {
+namespace PhysicalProject {
+	namespace GameDemo {
 		typedef std::function<void(float)> StateUpdateFunction;
 
 		class  State		{

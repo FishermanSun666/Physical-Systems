@@ -12,7 +12,7 @@ https://research.ncl.ac.uk/game/
 
 #include <string>
 
-namespace NCL {
+namespace PhysicalProject {
 	namespace Rendering {
 		class OGLTexture : public TextureBase
 		{
