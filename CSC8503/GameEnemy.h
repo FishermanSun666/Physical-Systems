@@ -69,16 +69,19 @@ public:
 		if (!found) { return false; }
 		//get next target
 		Vector3 toPos;
-		outPath.PopWaypoint(moveTarget);
+		outPath.PopWaypoint(moveTarget); //pos first position
+		Vector3 pre = position;
+		bool find = false;
 		while (outPath.PopWaypoint(toPos)) {
 			toPos.y = position.y;
-			if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(position, toPos)) {
-				//too close, find next position.
-				continue;
+			if (!find) {
+				moveTarget = toPos;
+				find = true;
 			}
-			moveTarget = toPos;
-			break;
+			PhysicalProject::Debug::DrawLine(pre, toPos, Vector4(0, 1, 0, 1));
+			pre = toPos;
 		}
+
 		return true;
 	};
 

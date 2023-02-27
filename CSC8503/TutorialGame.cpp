@@ -121,15 +121,14 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	Vector3 floorSize = Vector3(200, 2, 200);
 	AABBVolume* volume = new AABBVolume(floorSize);
 	floor->SetBoundingVolume((CollisionVolume*)volume, floorSize);
-	floor->GetTransform()
-		.SetScale(floorSize * 2)
-		.SetPosition(position);
+	floor->GetTransform().SetScale(floorSize*2).SetPosition(position);
 
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
+	floor->SetColour(Vector4(0.5f, 0.5f, 0.5f, 1.0f));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->SetFriction(0.3f);
+	floor->GetPhysicsObject()->SetFriction(0.8f);
 
 	world->AddGameObject(floor);
 
@@ -175,7 +174,8 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
-	cube->GetPhysicsObject()->SetElasticity(0.0f);
+	cube->GetPhysicsObject()->SetElasticity(0.3f);
+	cube->GetPhysicsObject()->SetFriction(0.5f);
 	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
 	cube->GetPhysicsObject()->InitCubeInertia();
 
@@ -559,9 +559,7 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	AABBVolume* volume = new AABBVolume(size);
 	character->SetBoundingVolume((CollisionVolume*)volume, size);
 
-	character->GetTransform()
-		.SetScale(Vector3(scale, scale, scale))
-		.SetPosition(position);
+	character->GetTransform().SetScale(Vector3(scale, scale, scale)).SetPosition(position);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
@@ -608,6 +606,7 @@ GameBall* TutorialGame::AddBallToWorld(const Vector3& position) {
 	ball->SetPhysicsObject(new PhysicsObject(&ball->GetTransform(), ball->GetBoundingVolume()));
 
 	ball->GetPhysicsObject()->SetInverseMass(1.0f);
+	ball->GetPhysicsObject()->SetFriction(0.5f);
 	ball->GetPhysicsObject()->InitCubeInertia();
 	ball->SetColour(Vector4(1, 1, 0, 1));
 	ball->SetOriginPosition(position);
@@ -625,9 +624,7 @@ GameObject* TutorialGame::AddGoalToWorld(const Vector3& position) {
 	AABBVolume* volume = new AABBVolume(size);
 	goal->SetBoundingVolume((CollisionVolume*)volume, size);
 
-	goal->GetTransform()
-		.SetScale(Vector3(scale, scale, scale))
-		.SetPosition(position);
+	goal->GetTransform().SetScale(Vector3(scale, scale, scale)).SetPosition(position);
 
 	goal->SetRenderObject(new RenderObject(&goal->GetTransform(), goalMesh, nullptr, basicShader));
 	goal->SetPhysicsObject(new PhysicsObject(&goal->GetTransform(), goal->GetBoundingVolume()));

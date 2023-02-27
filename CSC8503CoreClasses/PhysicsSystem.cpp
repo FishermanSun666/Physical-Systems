@@ -260,17 +260,16 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 
 	Vector3 fullImpulse = p.normal * j;
-
-	physA->ApplyLinearImpulse(-fullImpulse);
-	physB->ApplyLinearImpulse(fullImpulse);
 	//elasticity
 	float elasticity = (physA->GetElasticity() + physB->GetElasticity()) / 2.0f;
-	physA->SetLinearVelocity(physA->GetLinearVelocity() * elasticity);
-	physB->SetLinearVelocity(physB->GetLinearVelocity() * elasticity);
+	physA->ApplyLinearImpulse(-fullImpulse * elasticity);
+	physB->ApplyLinearImpulse(fullImpulse * elasticity);
 	//friction gives angular rotation
 	float friction = (physA->GetFriction() + physB->GetFriction()) / 2.0f;
-	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -physA->GetLinearVelocity()));
-	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, -physB->GetLinearVelocity()));
+	physA->SetLinearVelocity(physA->GetLinearVelocity() * friction);
+	physB->SetLinearVelocity(physB->GetLinearVelocity() * friction);
+	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -physA->GetLinearVelocity()) * friction);
+	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, -physB->GetLinearVelocity()) * friction);
 }
 
 /*
