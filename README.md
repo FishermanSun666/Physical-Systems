@@ -40,39 +40,39 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 #### Gravity && Elasticity && Collision Detection && Collision Response
 
-![](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\gravity.gif)
+![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/gravity.gif)
 
 #### Friction
 
-![](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\friction.gif)
+![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/friction.gif)
 
 #### Constraint
 
-![](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\constrain.gif)
+![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/constrain.gif)
 
 #### Spatial Acceleration
 
-![](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\acceleration.gif)
+![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/acceleration.gif)
 
 #### Directional forces
 
-![directional force](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\directional force.gif)
+![directional force](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/directional force.gif)
 
 #### State Machines
 
 Player resurrection control via state machine
 
-![](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\state machine.gif)
+![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/state machine.gif)
 
 #### Simple Pathfinding
 
-![path finding](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\path finding.gif)
+![path finding](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/path finding.gif)
 
 #### Behaviour Trees
 
 Enemy action paths are controlled using behaviour trees
 
-![behavior trees](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\behavior trees.png)![behavior trees1](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\behavior trees1.png)
+![behavior trees](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/behavior trees.png)![behavior trees1](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/behavior trees1.png)
 
 #### Pushdown Automata && Object View
 
@@ -80,5 +80,5 @@ When an enemy sees a player it goes into tracking behaviour, and when it loses t
 
 The enemy's field of view is determined by calculating whether the angle between the vector from the enemy to the player and the direction of the enemy is less than a set value, and then checking whether there is a field of view obstacle between the enemy and the player by ray collision detection.
 
-![pushdown automata](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\pushdown automata.gif)
+![pushdown automata](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/pushdown automata.gif)
 
