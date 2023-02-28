@@ -26,7 +26,7 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 [Left] click - Catching the ball
 
-	##### When you hold the ball
+##### When you hold the ball
 
 [Q] - Reduced force
 
