@@ -262,8 +262,8 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	Vector3 fullImpulse = p.normal * j;
 	//elasticity
 	float elasticity = (physA->GetElasticity() + physB->GetElasticity()) / 2.0f;
-	physA->ApplyLinearImpulse(-fullImpulse * elasticity);
-	physB->ApplyLinearImpulse(fullImpulse * elasticity);
+	physA->ApplyLinearImpulse(-fullImpulse);// *elasticity);
+	physB->ApplyLinearImpulse(fullImpulse);// *elasticity);
 	//friction gives angular rotation
 	float friction = (physA->GetFriction() + physB->GetFriction()) / 2.0f;
 	physA->SetLinearVelocity(physA->GetLinearVelocity() * friction);

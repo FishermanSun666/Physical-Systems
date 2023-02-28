@@ -6,10 +6,10 @@
 
 namespace NCL {
 	namespace GameDemo {
-		const float PLAYER_LIVE_TIME = 60.0f;
+		const float PLAYER_LIVE_TIME = 120.0f;
 		const float PLAYER_RIVIVE_TIME = 5.0f;
-		const float PLAYER_SPEED_1 = 25.0f;
-		const float PLAYER_SPEED_2 = 50.0f;
+		const float PLAYER_SPEED_1 = 2.5f;
+		const float PLAYER_SPEED_2 = 5.0f;
 		const float PLAYER_SPEED_UP_LIMIT = 3.0f; //seconds
 		const float PLAYER_TURN_SPEED = 0.02f;
 		const Vector4 PLAYER_DEFAULT_COLOUR = Vector4(1.5f, 1.5f, 1.5f, 2.0f);
@@ -20,7 +20,7 @@ namespace NCL {
 			bool prapare = true;
 			int score = 0;
 			float liveTime = PLAYER_LIVE_TIME;
-			float restrictedTime = 3.0f;
+			float restrictedTime = 0.0f;
 			float speed = PLAYER_SPEED_1;
 			float quickSpeed = PLAYER_SPEED_2;
 			float turnSpeed = PLAYER_TURN_SPEED;

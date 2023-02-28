@@ -15,10 +15,11 @@ using namespace NCL;
 using namespace GameDemo;
 
 const float ENEMY_SIGHT_LINE = 50.0f;
-const float ENEMY_SIGHT_RANGE_DEGREE = 60.0f; //Fan view
-const float ENEMY_SPEED = 50.0f;
-const float	ENEMY_TRACKING_SPEED = 75.0f;
-const float ENEMY_ARRIVE_OFFSET = 1.5f;
+const float ENEMY_SIGHT_RANGE_DEGREE = 90.0f; //Fan view
+const float ENEMY_SPEED = 2.0f;
+const float	ENEMY_TRACKING_SPEED = 2.5f;
+const float ENEMY_ARRIVE_OFFSET = 2.0f;
+const float ENEMY_FRICTION = 0.6f;
 const Vector4 ENEMY_DEFAULT_COLOUR = Vector4(3.0f, 3.0f, 3.0f, 1.0f);
 const Vector4 ENEMY_TRACKING_COLOUR = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -30,7 +31,7 @@ private:
 
 	float speed = ENEMY_SPEED;
 	//pathFinding
-	Vector3 lastTarget;
+	Vector3 lastTarget; //last final target position
 	Vector3 moveTarget;
 	Vector3 playerPosition;
 	NavigationGrid* map;
@@ -42,6 +43,10 @@ public:
 	~GameEnemy() {};
 
 	Vector3 GetPlayerPosition() { return playerPosition; }
+	Vector3 GetHoldHorizontalPosition() {
+		Vector3 pos = transform.GetPosition();
+		return Vector3(pos.x, boundary.y, pos.z);
+	}
 
 	void SetPathFindingMap(NavigationGrid* m) {
 		map = m;
@@ -62,9 +67,8 @@ public:
 
 	bool PathFinding(const Vector3& target) {
 		if (nullptr == map) { return false; }
-		Vector3 position = transform.GetPosition();
-		if (ENEMY_ARRIVE_OFFSET * 3.0f >= Maths::Distance(position, target)) {
-			moveTarget = target;
+		Vector3 position = GetHoldHorizontalPosition();
+		if (moveTarget != Vector3() && ENEMY_ARRIVE_OFFSET < Maths::Distance(position, moveTarget)) { //keep moving last target
 			return true;
 		}
 		//find path
@@ -83,7 +87,7 @@ public:
 	};
 
 	void Move(float dt) {
-		Vector3 position = transform.GetPosition();
+		Vector3 position = GetHoldHorizontalPosition();
 		Vector3 path = position - moveTarget;
 
 		//turn orientation
@@ -92,14 +96,13 @@ public:
 		Quaternion q(modelMat);
 		transform.SetOrientation(q);
 		//move
-		path.Normalise();
-		physicsObject->AddForce(-path * speed);
+		physicsObject->ApplyLinearImpulse(-path.Normalised() * speed);
 	}
 
 	bool MoveToTarget(float dt, Vector3 target) {
 		//arrive
-		Vector3 pos = GetTransform().GetPosition();
-		Vector3 tmp = Vector3(target.x, pos.y, target.z);
+		Vector3 pos = GetHoldHorizontalPosition();
+		Vector3 tmp = Vector3(target.x, boundary.y, target.z);
 		if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(pos, tmp)) {
 			lastTarget = target;
 			return false;

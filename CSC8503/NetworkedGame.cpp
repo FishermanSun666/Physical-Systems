@@ -50,7 +50,7 @@ void NetworkedGame::StartAsClient(char a, char b, char c, char d) {
 	StartLevel();
 }
 
-void NetworkedGame::UpdateGame(float dt) {
+void NetworkedGame::Update(float dt) {
 	timeToNextPacket -= dt;
 	if (timeToNextPacket < 0) {
 		if (thisServer) {
@@ -69,7 +69,7 @@ void NetworkedGame::UpdateGame(float dt) {
 		StartAsClient(127,0,0,1);
 	}
 
-	TutorialGame::UpdateGame(dt);
+	TutorialGame::Update(dt);
 }
 
 void NetworkedGame::UpdateAsServer(float dt) {

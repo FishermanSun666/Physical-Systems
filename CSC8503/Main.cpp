@@ -113,7 +113,7 @@ int main() {
 			w->SetWindowPosition(0, 0);
 		}
 
-		g->UpdateGame(dt);
+		g->Update(dt);
 	}
 	Window::DestroyGameWindow();
 }

@@ -15,20 +15,28 @@ namespace NCL {
 	namespace GameDemo {
 		const int GOAL_SCORE = 10;
 		const float GOAL_TIP_TIME = 3.0f;
+		const int GAME_MODE_DEFAULT = 0;
+		const int GAME_MODE_TEST = 1;
+		const int GAME_MODE_START = 2;
+		const float COUNT_DOWN_TIME = 3.0f;
 
 		class TutorialGame		{
 		public:
 			TutorialGame();
 			~TutorialGame();
 
-			virtual void UpdateGame(float dt);
-
+			virtual void Update(float dt);
 		protected:
 			void InitialiseAssets();
 
 			void InitCamera();
 			void UpdateKeys();
+			bool UpdateCountdown(float dt);
+			void MainMenu();
+			void SelectMode();
 			void InitWorld();
+			void InitTest();
+			void InitGame();
 
 			/*
 			These are some of the world/object creation functions I created when testing the functionality
@@ -41,9 +49,10 @@ namespace NCL {
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
 			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
 			void InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims);
-
 			void InitDefaultFloor();
 
+			void UpdateTest(float dt);
+			void UpdateGame(float dt);
 			bool SelectObject();
 			void MoveSelectedObject();
 			void DebugObjectMovement();
@@ -91,6 +100,8 @@ namespace NCL {
 #else
 			GameTechRenderer* renderer;
 #endif
+			int gameMode = GAME_MODE_DEFAULT;
+
 			PhysicsSystem*		physics;
 			GameWorld*			world;
 
@@ -125,6 +136,7 @@ namespace NCL {
 			bool pause = false;
 			bool gameover = false;
 			float goalTime = 0;
+			float countdown = COUNT_DOWN_TIME;
 			Vector3 viewOffset = Vector3(5, 1, 5);
 
 			NavigationGrid* mapPathFinding = nullptr;

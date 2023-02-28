@@ -76,7 +76,7 @@ void TutorialGame::InitialiseAssets() {
 	basicShader = renderer->LoadShader("scene.vert", "scene.frag");
 
 	InitCamera();
-	InitWorld();
+	//InitWorld();
 }
 
 void TutorialGame::InitCamera() {
@@ -91,7 +91,14 @@ void TutorialGame::InitCamera() {
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
+}
 
+void TutorialGame::InitTest() {
+	InitGameExamples();
+	InitDefaultFloor();
+}
+
+void TutorialGame::InitGame() {
 	//game
 	try {
 		InitMap();
@@ -128,7 +135,6 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->SetFriction(0.9f);
 
 	world->AddGameObject(floor);
 
@@ -166,11 +172,10 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject("Cube");
+	AABBVolume* volume = new AABBVolume(dimensions * 0.45f);
+	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions * 0.45f);
 
-	AABBVolume* volume = new AABBVolume(dimensions);
-	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions);
-
-	cube->GetTransform().SetPosition(position).SetScale(dimensions * 2);
+	cube->GetTransform().SetPosition(position).SetScale(dimensions);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
@@ -185,10 +190,11 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 }
 
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
+	float scale = 1.0f;
 	GameObject* apple = new GameObject();
-	SphereVolume* volume = new SphereVolume(0.5f);
-	apple->SetBoundingVolume((CollisionVolume*)volume, Vector3(0.5f, 0.5f, 0.5f));
-	apple->GetTransform().SetScale(Vector3(2, 2, 2)).SetPosition(position);
+	SphereVolume* volume = new SphereVolume(scale);
+	apple->SetBoundingVolume((CollisionVolume*)volume, Vector3(scale, scale, scale));
+	apple->GetTransform().SetScale(Vector3(scale, scale, scale)).SetPosition(position);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), sphereMesh, nullptr, basicShader));
 	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
@@ -226,9 +232,9 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 0, 0));
-	AddEnemyToWorld(Vector3(0, 0, 5));
-	AddBonusToWorld(Vector3(10, 0, 0));
+	AddPlayerToWorld(Vector3(0, 5, 0));
+	AddEnemyToWorld(Vector3(0, 5, 5));
+	AddBonusToWorld(Vector3(10, 5, 0));
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -268,6 +274,53 @@ void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing,
 	}
 }
 
+void TutorialGame::SelectMode() {
+	string text = "1. Test Mode.";
+	Debug::Print(text, Vector2(35, 30), Debug::GREEN);
+	text = "2. Game Start.";
+	Debug::Print(text, Vector2(35, 50), Debug::GREEN);
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM1)) {
+		gameMode = GAME_MODE_TEST;
+		InitTest();
+	}
+	else if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM2)) {
+		gameMode = GAME_MODE_START;
+		InitGame();
+	}
+}
+
+void TutorialGame::Update(float dt) {
+	//game mode
+	switch (gameMode) {
+	case GAME_MODE_DEFAULT:
+	{
+		SelectMode();
+		break;
+	}
+	case GAME_MODE_TEST:
+	{
+		UpdateTest(dt);
+		break;
+	}
+	case GAME_MODE_START:
+	{
+		UpdateGame(dt);
+		break;
+	}
+	default:
+		std::cout << "mode error" << std::endl;
+	}
+	renderer->Update(dt);
+	renderer->Render();
+	Debug::UpdateRenderables(dt);
+}
+
+void TutorialGame::UpdateTest(float dt) {
+	world->GetMainCamera()->UpdateCamera(dt);
+	world->UpdateWorld(dt);
+	physics->Update(dt);
+}
+
 void TutorialGame::UpdateGame(float dt) {
 	//reset word
 	if (gameover && Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
@@ -275,7 +328,7 @@ void TutorialGame::UpdateGame(float dt) {
 		return;
 	}
 	UpdateKeys();
-	//game model
+	//game status
 	if (playerObject != nullptr && !pause && !gameover) {
 		CameraLockOnPlayer();
 		UpdateGameObject(dt);
@@ -293,13 +346,10 @@ void TutorialGame::UpdateGame(float dt) {
 	UpdateScreenInfo(dt);
 
 	world->UpdateWorld(dt);
-	renderer->Update(dt);
+
 	if (!pause) {
 		physics->Update(dt);
 	}
-
-	renderer->Render();
-	Debug::UpdateRenderables(dt);
 }
 
 void TutorialGame::UpdateKeys() {
@@ -307,10 +357,15 @@ void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P)) {
 		pause = !pause;
 	}
-	//TODO test
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
 		gameover = !gameover;
 	}
+}
+
+bool TutorialGame::UpdateCountdown(float dt) {
+	if (0.0f == countdown) { return false; }
+	countdown = countdown - dt >= 0.0f ? countdown - dt : 0.0f;
+	return true;
 }
 
 void TutorialGame::LockedObjectMovement() {
@@ -465,7 +520,7 @@ void TutorialGame::MoveSelectedObject() {
 }
 
 void TutorialGame::InitMap() {
-	float wallSize = 5.0f;
+	float wallSize = 6.0f;
 	//pathFinding
 	mapPathFinding = new NavigationGrid(wallSize, "GameGrid.txt");
 	if (nullptr == mapPathFinding) {
@@ -483,7 +538,7 @@ void TutorialGame::InitGameObjects() {
 	}
 	float wallSize = mapPathFinding->GetNodeSize();
 	//build map
-	Vector3 wallDimension = Vector3(wallSize, wallSize * 3.0f, wallSize) * 0.5f;
+	Vector3 wallDimension = Vector3(wallSize, wallSize * 3.0f, wallSize);
 	GridNode* allNodes = mapPathFinding->GetAllNodes();
 	if (nullptr == allNodes) {
 		throw 1;
@@ -555,7 +610,7 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float inverseMass = 0.1f;
 
 	GameEnemy* character = new GameEnemy("Enemy");
-	Vector3 size = Vector3(1.0f, 1.0f, 0.4f) * scale;
+	Vector3 size = Vector3(0.9f, 0.9f, 0.2f) * scale;
 	AABBVolume* volume = new AABBVolume(size);
 	character->SetBoundingVolume((CollisionVolume*)volume, size);
 
@@ -565,6 +620,7 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
+	character->GetPhysicsObject()->SetFriction(ENEMY_FRICTION);
 	character->SetColour(ENEMY_DEFAULT_COLOUR);
 
 	world->AddGameObject(character);
@@ -573,8 +629,8 @@ GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 }
 
 GamePlayer* TutorialGame::AddPlayerToWorld(const Vector3& position) {
-	float scale = 1.0f;
-	float inverseMass = 0.5f;
+	float scale = 1.2f;
+	float inverseMass = 0.1f;
 
 	GamePlayer* character = new GamePlayer("Player");
 	SphereVolume* volume = new SphereVolume(scale);
@@ -588,6 +644,7 @@ GamePlayer* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
+	character->GetPhysicsObject()->SetElasticity(0.0f);
 	character->SetOriginPosition(position);
 
 	world->AddGameObject(character);
@@ -683,6 +740,7 @@ void TutorialGame::CameraLockOnPlayer() {
 
 void TutorialGame::UpdateGameObject(float dt) {
 	if (gameover) { return; }
+	if (UpdateCountdown(dt)) { return; }
 	if (!playerObject->CheckInReviveTime()) {
 		PlayerObjectMovement(dt);
 	}
@@ -731,19 +789,19 @@ void TutorialGame::PlayerObjectMovement(float dt) {
 	Vector3 position = transform.GetPosition();
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->AddForce(fwdAxis * speed);
+		playerObject->GetPhysicsObject()->ApplyLinearImpulse(fwdAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->AddForce(-fwdAxis * speed);
+		playerObject->GetPhysicsObject()->ApplyLinearImpulse(-fwdAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->AddForce(-rightAxis * speed);
+		playerObject->GetPhysicsObject()->ApplyLinearImpulse(-rightAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->AddForce(rightAxis * speed);
+		playerObject->GetPhysicsObject()->ApplyLinearImpulse(rightAxis * speed);
 	}
 }
 
@@ -805,10 +863,13 @@ bool TutorialGame::KickBall() {
 		//higher amend
 		tarPos.y += 1.0f;
 		ballObject->GetTransform().SetPosition(tarPos);
+		/*
+		ballObject->GetPhysicsObject()->ClearForces();
+		ballObject->GetPhysicsObject()->SetAngularVelocity(Vector3());
+		*/
 		//change force;
 		if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::E)) { ballObject->IncreaseForce(100.0f); }
 		else if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::Q)) { ballObject->DecreaseForce(100.0f); }
-		//std::cout << "kick force: " << ballObject->GetForce() << std::endl;
 		//change angle
 		float changeAngle = -Window::GetMouse()->GetRelativePosition().y;
 		ballObject->AddKickAngle(changeAngle * 0.01);
@@ -854,7 +915,7 @@ void TutorialGame::CheckBallState() {
 	//check collision detection
 	CollisionDetection::CollisionInfo info;
 	if (!CollisionDetection::ObjectIntersection(playerObject, ballObject, info)) { return; }
-	PositionConstraint* contraint = new PositionConstraint(playerObject, ballObject, 2);
+	PositionConstraint* contraint = new PositionConstraint(playerObject, ballObject, 4);
 	world->AddConstraint(contraint);
 	playerObject->CatchBall(contraint);
 	std::cout << "player catch ball!!" << std::endl;
@@ -884,6 +945,10 @@ void TutorialGame::CheckPlayerDead() {
 }
 
 void TutorialGame::UpdateScreenInfo(float dt) {
+	//countdown
+	if (countdown != 0.0f) {
+		Debug::Print(std::to_string(int(countdown)), Vector2(50, 30), Debug::WHITE);
+	}
 	//pause
 	if (pause) {
 		Debug::Print("(P) pause on", Vector2(1, 95), Debug::GREEN);
@@ -917,7 +982,7 @@ void TutorialGame::UpdateScreenInfo(float dt) {
 		Debug::Print(text, Vector2(35, 10), Debug::BLUE);
 		float reviveTime = playerObject->GetReviveTime();
 		if (0 < reviveTime) {
-			if (3 < reviveTime) {
+			if (PLAYER_RIVIVE_TIME * 3.0f / 5.0f < reviveTime) {
 				text = "YOU DEAD";
 				Debug::Print(text, Vector2(42.5, 20), Debug::RED);
 			}
@@ -953,5 +1018,7 @@ void TutorialGame::ResetGame() {
 	goalObject = nullptr;
 	playerObject = nullptr;
 	enemyObjects = std::vector<GameEnemy*>();
+
 	InitWorld();
+	InitGame();
 }
