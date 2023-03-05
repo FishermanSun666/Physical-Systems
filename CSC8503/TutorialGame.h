@@ -66,6 +66,7 @@ namespace NCL {
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			GameObject* AddBonusToWorld(const Vector3& position);
+			GameObject* AddCapsuleToWorld(const Vector3& position, float halfHeight, float radius, float inversMass = 1.0f);
 
 			//test state machine
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
@@ -77,10 +78,11 @@ namespace NCL {
 			void UpdateGameObject(float dt);
 			void UpdateScreenInfo(float dt);
 
+			GameObject* AddWallToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			GamePlayer* AddPlayerToWorld(const Vector3& position);
 			GameEnemy* AddEnemyToWorld(const Vector3& position);
 			GameBall* AddBallToWorld(const Vector3& position);
-			GameObject* AddGoalToWorld(const Vector3& position);
+			GameObject* AddGoalTargetToWorld(const Vector3& position);
 			GameObject* AddGoalDeocrationToWorld(const Vector3& position);
 
 			void PlayerObjectMovement(float dt);

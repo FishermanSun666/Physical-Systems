@@ -26,7 +26,7 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 [Left] click - Catching the ball
 
-	##### When you hold the ball
+##### When you hold the ball
 
 [Q] - Reduced force
 
@@ -56,7 +56,7 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 #### Directional forces
 
-![directional force](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/directional force.gif)
+![directional force](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/directional%20force.gif)
 
 #### State Machines
 

@@ -125,7 +125,7 @@ A single function to add a large immovable cube to the bottom of our world
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject();
 
-	Vector3 floorSize = Vector3(200, 2, 200);
+	Vector3 floorSize = Vector3(200.0f, 2.0f, 200.0f);
 	AABBVolume* volume = new AABBVolume(floorSize);
 	floor->SetBoundingVolume((CollisionVolume*)volume, floorSize);
 	floor->GetTransform().SetScale(floorSize*2).SetPosition(position);
@@ -172,10 +172,10 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject("Cube");
-	AABBVolume* volume = new AABBVolume(dimensions * 0.45f);
-	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions * 0.45f);
+	OBBVolume* volume = new OBBVolume(dimensions);
+	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions);
 
-	cube->GetTransform().SetPosition(position).SetScale(dimensions);
+	cube->GetTransform().SetPosition(position).SetScale(dimensions * 1.8f);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
@@ -207,6 +207,28 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	return apple;
 }
 
+GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfHeight, float radius, float inverseMass) {
+	GameObject* capsule = new GameObject();
+
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius);
+	capsule->SetBoundingVolume((CollisionVolume*)volume, Vector3(halfHeight, halfHeight, halfHeight));
+
+	capsule->GetTransform().SetScale(Vector3(radius * 2, halfHeight, radius * 2)).SetPosition(position);
+
+	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
+	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
+
+	capsule->GetPhysicsObject()->SetInverseMass(inverseMass);
+	capsule->GetPhysicsObject()->InitCubeInertia();
+
+	//capsule->GetPhysicsObject()->SetElasticity(0.8f);
+
+	world->AddGameObject(capsule);
+
+	return capsule;
+
+}
+
 StateGameObject* TutorialGame::AddStateObjectToWorld(const Vector3& position) {
 	StateGameObject* apple = new StateGameObject();
 
@@ -232,9 +254,9 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
-	AddEnemyToWorld(Vector3(0, 5, 5));
-	AddBonusToWorld(Vector3(10, 5, 0));
+	AddCubeToWorld(Vector3(0.0f, 15.0f, 0.0f), Vector3(2.5f, 2.5f, 2.5f), 0.5f);
+	AddCapsuleToWorld(Vector3(0.0f, 15.0f, 5.0f), 1.5, 0.5);
+	//AddSphereToWorld(Vector3(0.0f, 15.0f, 5.0f), 2.5f);
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -538,7 +560,7 @@ void TutorialGame::InitGameObjects() {
 	}
 	float wallSize = mapPathFinding->GetNodeSize();
 	//build map
-	Vector3 wallDimension = Vector3(wallSize, wallSize * 3.0f, wallSize);
+	Vector3 wallDimension = Vector3(wallSize * 0.5f, wallSize * 3.0f, wallSize * 0.5f);
 	GridNode* allNodes = mapPathFinding->GetAllNodes();
 	if (nullptr == allNodes) {
 		throw 1;
@@ -558,7 +580,7 @@ void TutorialGame::InitGameObjects() {
 		case ('x'):
 		{
 			//add wall;
-			AddCubeToWorld(node.position, wallDimension, 0.0f);
+			AddWallToWorld(node.position, wallDimension, 0.0f);
 			continue;
 		}
 		case ('e'):
@@ -578,12 +600,12 @@ void TutorialGame::InitGameObjects() {
 		case ('p'):
 		{
 			//player;
-			playerObject = AddPlayerToWorld(node.position);
+			playerObject = AddPlayerToWorld(Vector3(node.position.x, 3.5f, node.position.z));
 			continue;
 		}
 		case ('g'):
 			//goal
-			goalObject = AddGoalToWorld(node.position);
+			goalObject = AddGoalTargetToWorld(node.position);
 			continue;
 		default:
 			//char to int
@@ -605,12 +627,31 @@ void TutorialGame::InitGameObjects() {
 	return;
 }
 
+
+GameObject* TutorialGame::AddWallToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
+	GameObject* cube = new GameObject("Cube");
+	AABBVolume* volume = new AABBVolume(dimensions);
+	cube->SetBoundingVolume((CollisionVolume*)volume, dimensions);
+
+	cube->GetTransform().SetPosition(position).SetScale(dimensions * 2.0f);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+	//cube->GetPhysicsObject()->SetFriction(0.5f);
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
+
 GameEnemy* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float scale = 2.0f;
 	float inverseMass = 0.1f;
 
 	GameEnemy* character = new GameEnemy("Enemy");
-	Vector3 size = Vector3(0.9f, 0.9f, 0.2f) * scale;
+	Vector3 size = Vector3(1.0f, 0.9f, 0.3f) * scale;
 	AABBVolume* volume = new AABBVolume(size);
 	character->SetBoundingVolume((CollisionVolume*)volume, size);
 
@@ -644,7 +685,7 @@ GamePlayer* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
 
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->SetElasticity(0.0f);
+	character->GetPhysicsObject()->SetElasticity(0.8f);
 	character->SetOriginPosition(position);
 
 	world->AddGameObject(character);
@@ -663,7 +704,6 @@ GameBall* TutorialGame::AddBallToWorld(const Vector3& position) {
 	ball->SetPhysicsObject(new PhysicsObject(&ball->GetTransform(), ball->GetBoundingVolume()));
 
 	ball->GetPhysicsObject()->SetInverseMass(1.0f);
-	ball->GetPhysicsObject()->SetFriction(0.5f);
 	ball->GetPhysicsObject()->InitCubeInertia();
 	ball->SetColour(Vector4(1, 1, 0, 1));
 	ball->SetOriginPosition(position);
@@ -673,11 +713,11 @@ GameBall* TutorialGame::AddBallToWorld(const Vector3& position) {
 	return ball;
 }
 
-GameObject* TutorialGame::AddGoalToWorld(const Vector3& position) {
-	float scale = 4.0f;
+GameObject* TutorialGame::AddGoalTargetToWorld(const Vector3& position) {
+	float scale = 5.5f;
 
 	GameObject* goal = new GameObject();
-	Vector3 size = Vector3(0.3f, 0.9f, 0.3f) * scale;
+	Vector3 size = Vector3(0.3f, 0.85f, 0.3f) * scale;
 	AABBVolume* volume = new AABBVolume(size);
 	goal->SetBoundingVolume((CollisionVolume*)volume, size);
 
@@ -789,19 +829,22 @@ void TutorialGame::PlayerObjectMovement(float dt) {
 	Vector3 position = transform.GetPosition();
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::W)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->ApplyLinearImpulse(fwdAxis * speed);
+		playerObject->GetTransform().SetPosition(playerObject->GetTransform().GetPosition() + fwdAxis * dt * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::S)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->ApplyLinearImpulse(-fwdAxis * speed);
+		playerObject->GetTransform().SetPosition(playerObject->GetTransform().GetPosition() - fwdAxis * dt * speed);
+		//playerObject->GetPhysicsObject()->ApplyLinearImpulse(-fwdAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::A)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->ApplyLinearImpulse(-rightAxis * speed);
+		playerObject->GetTransform().SetPosition(playerObject->GetTransform().GetPosition() - rightAxis * dt * speed);
+		//playerObject->GetPhysicsObject()->ApplyLinearImpulse(-rightAxis * speed);
 	}
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::D)) {
 		speedUp();
-		playerObject->GetPhysicsObject()->ApplyLinearImpulse(rightAxis * speed);
+		playerObject->GetTransform().SetPosition(playerObject->GetTransform().GetPosition() + rightAxis * dt * speed);
+		//playerObject->GetPhysicsObject()->ApplyLinearImpulse(rightAxis * speed);
 	}
 }
 
@@ -841,8 +884,14 @@ void TutorialGame::UpdateEnemyState(float dt) {
 			enemy->StartTrackingPlayer(playerObject->GetTransform().GetPosition()); //update player' position
 		}
 		else if (enemy->TrackingPlayer()) {
-			enemy->SetColour(Vector4(0.0f, 0.5f, 1.0f, 1.0f));
-			enemy->LostPlayer();
+			if (enemy->CheckLostPlayerTime()) {
+				enemy->SetColour(Vector4(0.0f, 0.5f, 1.0f, 1.0f));
+				enemy->LostPlayer();
+			}
+			else {
+				enemy->UpdateLostPlayerTime(dt);
+				enemy->UpdateTrackingPlayer(playerObject->GetTransform().GetPosition());
+			}
 		}
 		//update action
 		enemy->UpdateAction(dt);
@@ -859,20 +908,16 @@ bool TutorialGame::KickBall() {
 		Vector3 playerDir = -playerObject->GetTransform().GetOrientation() * Vector3(0, 0, -1);
 		playerDir.Normalise();
 		Vector3 playerPos = playerObject->GetTransform().GetPosition();
-		Vector3 tarPos = playerPos + playerDir * 4.0f;
+		Vector3 transPos = playerPos + playerDir * 2.0f;
 		//higher amend
-		tarPos.y += 1.0f;
-		ballObject->GetTransform().SetPosition(tarPos);
-		/*
-		ballObject->GetPhysicsObject()->ClearForces();
-		ballObject->GetPhysicsObject()->SetAngularVelocity(Vector3());
-		*/
+		transPos.y += 1.0f;
+		ballObject->GetTransform().SetPosition(transPos);
 		//change force;
 		if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::E)) { ballObject->IncreaseForce(100.0f); }
 		else if (Window::GetKeyboard()->KeyHeld(KeyboardKeys::Q)) { ballObject->DecreaseForce(100.0f); }
 		//change angle
-		float changeAngle = -Window::GetMouse()->GetRelativePosition().y;
-		ballObject->AddKickAngle(changeAngle * 0.01);
+		float changeAngle = -Window::GetMouse()->GetRelativePosition().y * 0.01f;
+		ballObject->AddKickAngle(changeAngle);
 		if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
 			ballObject->GetPhysicsObject()->SetLinearVelocity(playerObject->GetPhysicsObject()->GetLinearVelocity());
 			//cut constraint
@@ -915,7 +960,8 @@ void TutorialGame::CheckBallState() {
 	//check collision detection
 	CollisionDetection::CollisionInfo info;
 	if (!CollisionDetection::ObjectIntersection(playerObject, ballObject, info)) { return; }
-	PositionConstraint* contraint = new PositionConstraint(playerObject, ballObject, 4);
+	PositionConstraint* contraint = new PositionConstraint(playerObject, ballObject, 4.0f);
+	ballObject->GetPhysicsObject()->SetLinearVelocity(Vector3());
 	world->AddConstraint(contraint);
 	playerObject->CatchBall(contraint);
 	std::cout << "player catch ball!!" << std::endl;
@@ -1013,6 +1059,7 @@ void TutorialGame::UpdateScreenInfo(float dt) {
 void TutorialGame::ResetGame() {
 	pause = false;
 	gameover = false;
+	countdown = COUNT_DOWN_TIME;
 	delete mapPathFinding;
 	ballObject = nullptr;
 	goalObject = nullptr;

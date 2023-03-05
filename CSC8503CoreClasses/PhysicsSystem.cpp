@@ -237,7 +237,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	// Separate them out using projection
 	transformA.SetPosition(transformA.GetPosition() - (p.normal * p.penetration * (physA->GetInverseMass() / totalMass)));
 	transformB.SetPosition(transformB.GetPosition() + (p.normal * p.penetration * (physB->GetInverseMass() / totalMass)));
-	
+
 	Vector3 relativeA = p.localA;
 	Vector3 relativeB = p.localB;
 
@@ -260,17 +260,46 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 
 	Vector3 fullImpulse = p.normal * j;
-	//elasticity
-	float elasticity = (physA->GetElasticity() + physB->GetElasticity()) / 2.0f;
-	physA->ApplyLinearImpulse(-fullImpulse);// *elasticity);
-	physB->ApplyLinearImpulse(fullImpulse);// *elasticity);
-	//friction gives angular rotation
-	float friction = (physA->GetFriction() + physB->GetFriction()) / 2.0f;
-	physA->SetLinearVelocity(physA->GetLinearVelocity() * friction);
-	physB->SetLinearVelocity(physB->GetLinearVelocity() * friction);
-	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -physA->GetLinearVelocity()) * friction);
-	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, -physB->GetLinearVelocity()) * friction);
+	physA->ApplyLinearImpulse(-fullImpulse * physB->GetElasticity());
+	physB->ApplyLinearImpulse(fullImpulse * physA->GetElasticity());
+
+	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
+	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
+
+
+	float cFriction = physA->GetFriction() * physB->GetFriction();
+	Vector3 tangent = contactVelocity - (p.normal * Vector3::Dot(contactVelocity, p.normal));
+
+	Vector3 TinertiaA = Vector3::Cross(physA->GetInertiaTensor() * Vector3::Cross(relativeA, tangent), relativeA);
+	Vector3 TinertiaB = Vector3::Cross(physB->GetInertiaTensor() * Vector3::Cross(relativeB, tangent), relativeB);
+
+	float TangularEffect = Vector3::Dot(TinertiaA + TinertiaB, tangent);
+	float jt = -(cFriction * Vector3::Dot(contactVelocity, tangent.Normalised()) / (totalMass + TangularEffect));
+
+	Vector3 frictionImpulse = tangent.Normalised() * jt;
+	physA->ApplyLinearImpulse(-frictionImpulse);
+	physB->ApplyLinearImpulse(frictionImpulse);
+
+	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -frictionImpulse));
+	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, frictionImpulse));
+
 }
+//	//physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -physA->GetLinearVelocity()));
+//	//physB->ApplyAngularImpulse(Vector3::Cross(relativeB, -physB->GetLinearVelocity()));
+//	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -frictionImpulse));
+//	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, frictionImpulse));
+//}
+//	//elasticity
+//	float elasticity = (physA->GetElasticity() + physB->GetElasticity()) / 2.0f;
+//	physA->ApplyLinearImpulse(-fullImpulse);// *elasticity);
+//	physB->ApplyLinearImpulse(fullImpulse);// *elasticity);
+//	//friction gives angular rotation
+//	float friction = (physA->GetFriction() + physB->GetFriction()) / 2.0f;
+//	physA->SetLinearVelocity(physA->GetLinearVelocity() * friction);
+//	physB->SetLinearVelocity(physB->GetLinearVelocity() * friction);
+//	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -physA->GetLinearVelocity()) * friction);
+//	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, -physB->GetLinearVelocity()) * friction);
+//}
 
 /*
 

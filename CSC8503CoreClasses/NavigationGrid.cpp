@@ -65,14 +65,13 @@ NavigationGrid::NavigationGrid(float nodeSize, const std::string&filename) : Nav
 				if (n.connected[i]) {
 					if (n.connected[i]->type == '.') {
 						n.costs[i]		= 1;
-					}
-					//everywhere can be through;
-					if (n.connected[i]->type == 'x') {
+					}//everywhere can be through;
+					else if (n.connected[i]->type == 'x') {
 						n.connected[i] = nullptr; //actually a wall, disconnect!
 					}
-					/*else {
+					else {
 						n.costs[i] = 1;
-					}*/
+					}
 				}
 			}
 		}	

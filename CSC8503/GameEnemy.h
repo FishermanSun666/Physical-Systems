@@ -15,11 +15,13 @@ using namespace NCL;
 using namespace GameDemo;
 
 const float ENEMY_SIGHT_LINE = 50.0f;
-const float ENEMY_SIGHT_RANGE_DEGREE = 90.0f; //Fan view
-const float ENEMY_SPEED = 2.0f;
-const float	ENEMY_TRACKING_SPEED = 2.5f;
-const float ENEMY_ARRIVE_OFFSET = 2.0f;
+const float ENEMY_SIGHT_RANGE_DEGREE = 60.0f; //Fan view
+const float ENEMY_SPEED = 10.0f;
+const float	ENEMY_TRACKING_SPEED = 15.0f;
+const float ENEMY_ARRIVE_OFFSET = 0.05f;
 const float ENEMY_FRICTION = 0.6f;
+const float ENEMY_LOST_PLAYER_TIME = 1.0f;
+const float ENEMY_AUTO_TRACKING_DISTANT = 10.0f;
 const Vector4 ENEMY_DEFAULT_COLOUR = Vector4(3.0f, 3.0f, 3.0f, 1.0f);
 const Vector4 ENEMY_TRACKING_COLOUR = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -30,6 +32,7 @@ class GameEnemy : public GameObject {
 private:
 
 	float speed = ENEMY_SPEED;
+	float lostPlayerTime = 0.0f;
 	//pathFinding
 	Vector3 lastTarget; //last final target position
 	Vector3 moveTarget;
@@ -54,40 +57,63 @@ public:
 	void StartTrackingPlayer(Vector3 pp) {
 		playerPosition = pp;
 		speed = ENEMY_TRACKING_SPEED;
+		lostPlayerTime = ENEMY_LOST_PLAYER_TIME;
 		SetColour(ENEMY_TRACKING_COLOUR);
 	}
+	void UpdateTrackingPlayer(Vector3 pp) { playerPosition = pp; }
+
 	void LostPlayer() {
 		playerPosition = Vector3();
 		speed = ENEMY_SPEED;
 		SetColour(ENEMY_DEFAULT_COLOUR);
 	}
+
+	void UpdateLostPlayerTime(float dt) { lostPlayerTime = lostPlayerTime - dt > 0.0f ? lostPlayerTime - dt : 0.0f; }
+	bool CheckLostPlayerTime() { return lostPlayerTime == 0.0f; }
+
 	bool TrackingPlayer() {
 		return (playerPosition != Vector3());
 	}
 
+	bool MoveToTarget(float dt, Vector3 target) {
+		//arrive
+		Vector3 pos = transform.GetPosition();
+		//Vector3 pos = GetHoldHorizontalPosition();
+		Vector3 tmp = Vector3(target.x, pos.y, target.z);
+		if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(pos, tmp)) {
+			lastTarget = target;
+			return false;
+		}
+		if (PathFinding(tmp)) {
+			Move(dt);
+		}
+		return true;
+	}
+
 	bool PathFinding(const Vector3& target) {
 		if (nullptr == map) { return false; }
-		Vector3 position = GetHoldHorizontalPosition();
-		if (moveTarget != Vector3() && ENEMY_ARRIVE_OFFSET < Maths::Distance(position, moveTarget)) { //keep moving last target
-			return true;
-		}
+		Vector3 position = transform.GetPosition();
 		//find path
 		NavigationPath outPath;
 		bool found = map->FindPath(position, target, outPath);
 		if (!found) { return false; }
 		//get next target
 		Vector3 toPos;
-		outPath.PopWaypoint(moveTarget); //pos first position
+		Vector3 lastPos;
+		outPath.PopWaypoint(lastPos); //pop first position
 		while (outPath.PopWaypoint(toPos)) {
 			toPos.y = position.y;
-			moveTarget = toPos;
-			break;
+			if (ENEMY_ARRIVE_OFFSET < Maths::Distance(position, toPos)) {
+				moveTarget = toPos;
+				return true;
+			}
 		}
+		moveTarget = target;
 		return true;
 	};
 
 	void Move(float dt) {
-		Vector3 position = GetHoldHorizontalPosition();
+		Vector3 position = transform.GetPosition();
 		Vector3 path = position - moveTarget;
 
 		//turn orientation
@@ -97,19 +123,6 @@ public:
 		transform.SetOrientation(q);
 		//move
 		physicsObject->ApplyLinearImpulse(-path.Normalised() * speed);
-	}
-
-	bool MoveToTarget(float dt, Vector3 target) {
-		//arrive
-		Vector3 pos = GetHoldHorizontalPosition();
-		Vector3 tmp = Vector3(target.x, boundary.y, target.z);
-		if (ENEMY_ARRIVE_OFFSET >= Maths::Distance(pos, tmp)) {
-			lastTarget = target;
-			return false;
-		}
-		PathFinding(tmp);
-		Move(dt);
-		return true;
 	}
 
 	void InitialiseBehaviours(std::vector<Vector3> targets) {
