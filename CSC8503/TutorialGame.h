@@ -31,9 +31,10 @@ namespace NCL {
 
 			void InitCamera();
 			void UpdateKeys();
+			void UpdateGameKeys();
 			bool UpdateCountdown(float dt);
 			void MainMenu();
-			void SelectMode();
+			void SelectGameMode();
 			void InitWorld();
 			void InitTest();
 			void InitGame();

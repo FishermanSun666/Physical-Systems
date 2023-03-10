@@ -255,8 +255,8 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples() {
 	AddCubeToWorld(Vector3(0.0f, 15.0f, 0.0f), Vector3(2.5f, 2.5f, 2.5f), 0.5f);
-	AddCapsuleToWorld(Vector3(0.0f, 15.0f, 5.0f), 1.5, 0.5);
-	//AddSphereToWorld(Vector3(0.0f, 15.0f, 5.0f), 2.5f);
+	AddCapsuleToWorld(Vector3(0.0f, 15.0f, 5.0f), 2.0f, 1.0f);
+	AddSphereToWorld(Vector3(0.0f, 15.0f, 10.0f), 2.5f);
 }
 
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
@@ -296,7 +296,7 @@ void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing,
 	}
 }
 
-void TutorialGame::SelectMode() {
+void TutorialGame::SelectGameMode() {
 	string text = "1. Test Mode.";
 	Debug::Print(text, Vector2(35, 30), Debug::GREEN);
 	text = "2. Game Start.";
@@ -316,7 +316,7 @@ void TutorialGame::Update(float dt) {
 	switch (gameMode) {
 	case GAME_MODE_DEFAULT:
 	{
-		SelectMode();
+		SelectGameMode();
 		break;
 	}
 	case GAME_MODE_TEST:
@@ -338,7 +338,21 @@ void TutorialGame::Update(float dt) {
 }
 
 void TutorialGame::UpdateTest(float dt) {
-	world->GetMainCamera()->UpdateCamera(dt);
+	if (!inSelectionMode) {
+		world->GetMainCamera()->UpdateCamera(dt);
+	}
+	UpdateKeys();
+
+	if (useGravity) {
+		Debug::Print("(G)ravity on", Vector2(5, 95), Debug::RED);
+	}
+	else {
+		Debug::Print("(G)ravity off", Vector2(5, 95), Debug::RED);
+	}
+
+	RayCast();
+	SelectObject();
+	MoveSelectedObject();
 	world->UpdateWorld(dt);
 	physics->Update(dt);
 }
@@ -349,7 +363,7 @@ void TutorialGame::UpdateGame(float dt) {
 		ResetGame();
 		return;
 	}
-	UpdateKeys();
+	UpdateGameKeys();
 	//game status
 	if (playerObject != nullptr && !pause && !gameover) {
 		CameraLockOnPlayer();
@@ -375,6 +389,40 @@ void TutorialGame::UpdateGame(float dt) {
 }
 
 void TutorialGame::UpdateKeys() {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
+		InitWorld(); //We can reset the simulation at any time with F1
+		selectionObject = nullptr;
+		InitTest();
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
+		InitCamera(); //F2 will reset the camera to a specific default place
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
+		useGravity = !useGravity; //Toggle gravity!
+		physics->UseGravity(useGravity);
+	}
+	//Running certain physics updates in a consistent order might cause some
+	//bias in the calculations - the same objects might keep 'winning' the constraint
+	//allowing the other one to stretch too much etc. Shuffling the order so that it
+	//is random every frame can help reduce such bias.
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F9)) {
+		world->ShuffleConstraints(true);
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F10)) {
+		world->ShuffleConstraints(false);
+	}
+
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F7)) {
+		world->ShuffleObjects(true);
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F8)) {
+		world->ShuffleObjects(false);
+	}
+}
+
+void TutorialGame::UpdateGameKeys() {
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P)) {
 		pause = !pause;
@@ -391,6 +439,7 @@ bool TutorialGame::UpdateCountdown(float dt) {
 }
 
 void TutorialGame::LockedObjectMovement() {
+	if (!lockedObject) { return; }
 	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
 	Matrix4 camWorld = view.Inverse();
 
@@ -402,15 +451,15 @@ void TutorialGame::LockedObjectMovement() {
 
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
-		playerObject->GetPhysicsObject()->AddForce(fwdAxis);
+		lockedObject->GetPhysicsObject()->AddForce(fwdAxis);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
-		playerObject->GetPhysicsObject()->AddForce(-fwdAxis);
+		lockedObject->GetPhysicsObject()->AddForce(-fwdAxis);
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NEXT)) {
-		playerObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
+		lockedObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
 	}
 }
 
@@ -728,6 +777,7 @@ GameObject* TutorialGame::AddGoalTargetToWorld(const Vector3& position) {
 
 	//cannot move
 	goal->GetPhysicsObject()->SetInverseMass(0.0f);
+	goal->GetPhysicsObject()->SetElasticity(0.0f);
 	goal->GetPhysicsObject()->InitSphereInertia();
 
 	//set colour

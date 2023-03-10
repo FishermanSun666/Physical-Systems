@@ -790,13 +790,6 @@ bool CollisionDetection::OBBIntersection(const OBBVolume& volumeA, const Transfo
 		//std::cout << "new localA " << contactPoints.size() << std::endl;
 		collisionInfo.point.localA = contactPoints[0] - worldTransformA.GetPosition();
 		collisionInfo.point.localB = contactPoints[0] - worldTransformB.GetPosition();
-		//Debug::DrawLine(collisionInfo.point.localA, (collisionInfo.point.localA + axis * 100), Vector4(1, 0, 0, 1), 1);
-		//Debug::DrawLine(collisionInfo.point.localB, (collisionInfo.point.localB + axis * 100) , Vector4(0, 1, 0, 1), 1);
-
-		//Vector3 t;
-		//for (int i = 0; i < contactPoints.size(); i++) {
-		//	Debug::DrawLine(contactPoints[i], (contactPoints[i] + axis * 100), Vector4(1, 1, 1, 1), 1);
-		//}
 		return true;
 	}
 	return false;
