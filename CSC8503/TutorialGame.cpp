@@ -95,7 +95,7 @@ void TutorialGame::InitWorld() {
 
 void TutorialGame::InitTest() {
 	InitGameExamples();
-	//BridgeConstraintTest();
+	BridgeConstraintTest();
 	InitDefaultFloor();
 }
 
@@ -572,22 +572,22 @@ void TutorialGame::RayCast() {
 }
 
 void TutorialGame::BridgeConstraintTest() {
-	Vector3 cubeSize = Vector3(8, 8, 8);
+	Vector3 cubeSize = Vector3(4.0f, 4.0f, 4.0f);
 
-	float invCubeMass = 5;	//how heavy the middle pieces are
+	float invCubeMass = 5.0f;	//how heavy the middle pieces are
 	int numLinks = 10;
-	float maxDistance = 30;	//constraint distance
-	float cubeDistance = 20;	//distance between links
+	float maxDistance = 30.0f;	//constraint distance
+	float cubeDistance = 20.0f;	//distance between links
 
-	Vector3 startPos = Vector3(500, 500, 500);
+	Vector3 startPos = Vector3(5.0f, 100.0f, 5.0f);
 
-	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
-	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);
+	GameObject* start = AddCubeToWorld(startPos + Vector3(0.0f, 0.0f, 0.0f), cubeSize, 0);
+	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2.0f) * cubeDistance, 0.0f, 0.0f), cubeSize, 0.0f);
 
 	GameObject* previous = start;
 
 	for (int i = 0; i < numLinks; ++i) {
-		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
+		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1.0f) * cubeDistance, 0.0f, 0.0f), cubeSize, invCubeMass);
 		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
 		world->AddConstraint(constraint);
 		previous = block;
@@ -597,7 +597,7 @@ void TutorialGame::BridgeConstraintTest() {
 }
 
 void TutorialGame::MoveSelectedObject() {
-	Debug::Print("Click Force:" + std::to_string(forceMagnitude), Vector2(5, 90));
+	Debug::Print("Click Force:" + std::to_string(forceMagnitude), Vector2(5.0f, 90.0f));
 	forceMagnitude += Window::GetMouse()->GetWheelMovement() * 100.0f;
 
 	if (!selectionObject) {
@@ -871,16 +871,12 @@ void TutorialGame::UpdateGameObject(float dt) {
 }
 
 void TutorialGame::PlayerObjectMovement(float dt) {
-	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
-	Matrix4 camWorld = view.Inverse();
-
-	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
-	Vector3 fwdAxis = Vector3::Cross(Vector3(0, 1, 0), rightAxis);
-	fwdAxis.y = 0.0f;
-	fwdAxis.Normalise();
-	rightAxis.Normalise();
+	if (!playerObject) { return; }
 
 	Transform& transform = playerObject->GetTransform();
+
+	Vector3 fwdAxis = transform.GetDirVector().Normalised();
+	Vector3 rightAxis = Vector3::Cross(Vector3(0.0f, -1.0f, 0.0f), fwdAxis);
 	//orientation
 	float dirVal = Window::GetMouse()->GetRelativePosition().x;
 	while (180.0f <= dirVal) { dirVal -= 180.0f; }
