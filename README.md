@@ -40,19 +40,19 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 #### OBB Cube Collision Detection
 
-![OBB](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\OBB.gif)
+![OBB](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/OBB.gif)
 
 #### Capsule Collision Detection
 
-![Capsule](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\Capsule.gif)
+![Capsule](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/Capsule.gif)
 
 #### Sliding Friction
 
-![Sliding_friction](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\Sliding_friction.gif)
+![Sliding_friction](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/Sliding_friction.gif)
 
 #### Hinge
 
-![Hinge](D:\NCL\CSC8503\Physical-Systems\Assets\Pictures\Hinge.gif)
+![Hinge](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/Hinge.gif)
 
 #### Gravity && Elasticity  && Collision Response
 
