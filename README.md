@@ -46,7 +46,7 @@ The objective of the game is simple: we are a little duck. The objective is to g
 
 ![Capsule](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/Capsule.gif)
 
-#### Sliding Friction
+#### Sliding && Rolling Friction
 
 ![Sliding_friction](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/Sliding_friction.gif)
 
@@ -57,10 +57,6 @@ The objective of the game is simple: we are a little duck. The objective is to g
 #### Gravity && Elasticity  && Collision Response
 
 ![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/gravity.gif)
-
-#### Friction
-
-![](https://github.com/FishermanSun666/Physical-Systems/blob/master/Assets/Pictures/friction.gif)
 
 #### Constraint
 
